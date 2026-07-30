@@ -1,0 +1,20 @@
+# Backend dependencies for the merged SafeLanding app.
+#   pip install -r requirements.txt
+#
+# The core app runs on these ONLY. The retrieval engine and the SQLite
+# database layer are pure Python standard library (no extra packages), so the
+# whole thing works fully offline with zero paid services.
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic>=2.0          # models.py uses the Pydantic v2 API (model_validator)
+openai>=1.0
+easyocr>=1.7
+# ---- OPTIONAL upgrades (the app degrades gracefully without them) ----
+# Real LLM text analysis instead of the rule engine. Needs OPENAI_API_KEY set.
+#   openai>=1.0
+#
+# OCR for reading text out of uploaded screenshots (used by the "Upload
+# Image" feature). Pick ONE:
+#   easyocr>=1.7        # lighter, set OCR_ENGINE=easyocr (default)
+#   paddlepaddle>=2.6   # heavier, set OCR_ENGINE=paddle
+#   paddleocr>=2.7

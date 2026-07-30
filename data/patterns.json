@@ -1,0 +1,57 @@
+[
+  {
+    "Pattern_ID": "SP001",
+    "Pattern_Name": "Fake Landlord Deposit Request",
+    "Description": "A person claims to own or manage a room and asks the student to pay a deposit or first month rent before reliable verification.",
+    "Typical_Threat_Actor": "Fake landlord",
+    "Common_Channels": ["Facebook group", "WhatsApp", "Email", "Rental marketplace"],
+    "Trigger_Phrases": ["deposit before viewing", "many applicants", "reserve the room", "I am abroad", "send passport"],
+    "Knowledge_Gaps": ["KG001", "KG004", "KG005", "KG006"],
+    "Red_Flags": ["Payment requested before viewing", "Landlord cannot show the room live", "Pressure to decide immediately", "Bank account name does not match landlord"],
+    "Recommended_Actions": ["Do not pay yet", "Ask for live viewing or trusted local verification", "Verify landlord and contract details", "Report the listing to the platform"]
+  },
+  {
+    "Pattern_ID": "SP002",
+    "Pattern_Name": "Fake Roommate Invitation",
+    "Description": "A scammer pretends to be a student or housemate recruiting a new roommate and asks for a reservation fee.",
+    "Typical_Threat_Actor": "Fake student roommate",
+    "Common_Channels": ["Student WhatsApp group", "Facebook group", "Instagram DM", "Discord"],
+    "Trigger_Phrases": ["looking for a fourth roommate", "reservation fee", "we have many applicants", "send your ID to join"],
+    "Knowledge_Gaps": ["KG002", "KG003", "KG006"],
+    "Red_Flags": ["No verifiable housemates", "Group photos look generic", "Fee requested to secure a place", "Refuses university email verification"],
+    "Recommended_Actions": ["Ask to verify housemates through university email", "Confirm the address and tenancy permission", "Avoid paying informal reservation fees"]
+  },
+  {
+    "Pattern_ID": "SP003",
+    "Pattern_Name": "Fake Student Sublet",
+    "Description": "A person claims to temporarily sublet a student room but cannot prove they are the tenant or allowed to sublet.",
+    "Typical_Threat_Actor": "Fake subletter",
+    "Common_Channels": ["Facebook group", "Telegram", "Housing forum", "Email"],
+    "Trigger_Phrases": ["I am leaving for exchange", "temporary sublet", "pay now to hold it", "no registration possible"],
+    "Knowledge_Gaps": ["KG001", "KG003", "KG004", "KG005"],
+    "Red_Flags": ["No sublet permission", "No registration possible", "Only old photos are available", "Deposit sent to a different name"],
+    "Recommended_Actions": ["Request proof of permission to sublet", "Verify the original tenant", "Do not accept no-registration explanations without checking local rules"]
+  },
+  {
+    "Pattern_ID": "SP004",
+    "Pattern_Name": "Fake Housing Group Administrator",
+    "Description": "A scammer impersonates a group admin, student organization helper, or platform moderator to redirect students to a fake payment flow.",
+    "Typical_Threat_Actor": "Fake housing group administrator",
+    "Common_Channels": ["Facebook group", "WhatsApp", "Telegram", "Direct message"],
+    "Trigger_Phrases": ["admin approved", "verified landlord", "pay through this link", "official group partner"],
+    "Knowledge_Gaps": ["KG002", "KG006"],
+    "Red_Flags": ["Admin contacts by private message", "External payment link", "No public verification trail", "Urgent claim of exclusive access"],
+    "Recommended_Actions": ["Verify admin identity publicly", "Do not leave trusted platform workflows", "Check with the university or student organization"]
+  },
+  {
+    "Pattern_ID": "SP005",
+    "Pattern_Name": "Fake Rental Agency",
+    "Description": "A fake or cloned agency advertises rooms and collects registration, reservation, or viewing fees from students.",
+    "Typical_Threat_Actor": "Fake rental agency",
+    "Common_Channels": ["Cloned website", "Email", "Search ads", "Rental marketplace"],
+    "Trigger_Phrases": ["agency fee", "viewing package", "guaranteed room", "pay application fee", "limited student rooms"],
+    "Knowledge_Gaps": ["KG001", "KG002", "KG005", "KG006"],
+    "Red_Flags": ["Recently created website", "Copied listings", "Payment to personal account", "Guarantees that sound too good to be true"],
+    "Recommended_Actions": ["Check business registration and reviews", "Compare listings on official sources", "Avoid upfront fees before a concrete verified rental"]
+  }
+]

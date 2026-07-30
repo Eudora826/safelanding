@@ -1,0 +1,50 @@
+[
+  {
+    "Gap_ID": "KG001",
+    "Gap_Name": "Dutch Rental Deposit Rules",
+    "Description": "Students may not know when deposits are normally paid, how deposits are documented, or which payment requests are suspicious.",
+    "Why_It_Matters": "Scammers exploit urgency by asking for a deposit, reservation fee, or first month rent before the student has verified the property and landlord.",
+    "Safe_Guidance": "Do not pay before verifying the property, landlord identity, contract details, and payment account. Use traceable payment methods and keep written records.",
+    "Related_Patterns": ["SP001", "SP003", "SP005"]
+  },
+  {
+    "Gap_ID": "KG002",
+    "Gap_Name": "Student Housing Allocation Process",
+    "Description": "International students may not understand official waiting lists, lottery processes, university housing portals, or local housing scarcity.",
+    "Why_It_Matters": "Scammers use housing shortage pressure and claims of many applicants to force fast decisions.",
+    "Safe_Guidance": "Check the official university housing page and trusted housing platform rules before sending documents or money.",
+    "Related_Patterns": ["SP002", "SP004", "SP005"]
+  },
+  {
+    "Gap_ID": "KG003",
+    "Gap_Name": "Subletting Rules",
+    "Description": "Students may not know that subletting can require landlord, housing association, or municipality permission.",
+    "Why_It_Matters": "Fake subletters exploit plausible student-to-student arrangements and avoid formal contract checks.",
+    "Safe_Guidance": "Ask for written proof that subletting is permitted and verify the original tenant and address through independent channels.",
+    "Related_Patterns": ["SP002", "SP003"]
+  },
+  {
+    "Gap_ID": "KG004",
+    "Gap_Name": "Room Viewing Practices",
+    "Description": "New arrivals may not know that video tours, remote viewings, and inability to view in person can be abused.",
+    "Why_It_Matters": "Scammers hide that they do not control the property by refusing live or in-person verification.",
+    "Safe_Guidance": "Prefer in-person viewing, live video calls that show the address and surroundings, or verification by a trusted local person.",
+    "Related_Patterns": ["SP001", "SP003", "SP005"]
+  },
+  {
+    "Gap_ID": "KG005",
+    "Gap_Name": "Rental Contract Verification",
+    "Description": "Students may not know how to check whether a contract, landlord name, address, and payment account fit together.",
+    "Why_It_Matters": "Scammers use copied contracts, fake IDs, or mismatched bank accounts to look legitimate.",
+    "Safe_Guidance": "Verify landlord identity, address, contract terms, registration possibility, and bank account ownership before signing or paying.",
+    "Related_Patterns": ["SP001", "SP003", "SP005"]
+  },
+  {
+    "Gap_ID": "KG006",
+    "Gap_Name": "Housing Platform Trustworthiness",
+    "Description": "Students may overtrust social media groups, unofficial housing pages, copied listings, or platform-like messages.",
+    "Why_It_Matters": "Scammers impersonate administrators, agencies, and verified landlords to borrow credibility.",
+    "Safe_Guidance": "Use official platforms when possible, stay inside platform messaging, and verify external payment links or admin claims independently.",
+    "Related_Patterns": ["SP001", "SP004", "SP005"]
+  }
+]

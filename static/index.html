@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SafeLanding AI Threat Intel</title>
+    <style>
+      @font-face {
+        font-family: "Instrument Sans";
+        src: url("/assets/fonts/InstrumentSans-Variable.ttf") format("truetype");
+        font-weight: 400 700;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Roboto";
+        src: url("/assets/fonts/Roboto-Variable.ttf") format("truetype");
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: swap;
+      }
+      :root {
+        color-scheme: light;
+        --bg: #fff9f4;
+        --panel: #ffffff;
+        --ink: #393232;
+        --muted: #8a8280;
+        --line: #f0e2d4;
+        --accent: #eb8e37;
+        --accent-strong: #d97b28;
+        --accent-soft: #fbeada;
+        --warn: #92400e;
+        --font-head: "Instrument Sans", "Roboto", sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Roboto", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      header {
+        padding: 28px clamp(18px, 5vw, 56px) 18px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+      }
+      h1, h2, h3, button, label { font-family: var(--font-head); }
+      .back-link {
+        display: inline-flex; align-items: center; gap: 6px;
+        color: var(--accent); font-weight: 700; text-decoration: none;
+        font-size: 14px; margin-bottom: 10px;
+      }
+      h1 { margin: 0 0 8px; font-size: clamp(26px, 3vw, 38px); letter-spacing: 0; font-weight: 700; }
+      p { margin: 0; color: var(--muted); line-height: 1.5; }
+      main {
+        display: grid;
+        grid-template-columns: minmax(0, 760px);
+        justify-content: center;
+        gap: 22px;
+        padding: 24px clamp(18px, 5vw, 56px);
+      }
+      section {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 18px;
+      }
+      h2 { margin: 0 0 12px; font-size: 18px; }
+      label { display: block; margin-bottom: 8px; font-weight: 650; }
+      textarea, input, select {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        font: inherit;
+        color: var(--ink);
+        background: #fff;
+      }
+      textarea { min-height: 132px; resize: vertical; }
+      input[type="checkbox"] {
+        width: auto;
+        margin-right: 8px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .form-grid > .full { grid-column: 1 / -1; }
+      .checkbox-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 12px;
+        margin-top: 8px;
+      }
+      .checkbox-grid label {
+        display: flex;
+        align-items: flex-start;
+        gap: 4px;
+        margin: 0;
+        font-weight: 500;
+      }
+      .hint {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .hidden { display: none; }
+      button {
+        margin-top: 12px;
+        border: 0;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #fff;
+        padding: 11px 16px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:hover { background: var(--accent-strong); }
+      .result { display: grid; gap: 14px; }
+      .hit {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+      }
+      .hit strong { display: block; margin-bottom: 4px; }
+      .tagline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .tag {
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        padding: 4px 9px;
+        font-size: 13px;
+      }
+      .warning { color: var(--warn); }
+      pre {
+        max-height: 340px;
+        overflow: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: var(--accent-soft);
+        border-radius: 8px;
+        padding: 12px;
+      }
+      @media (max-width: 880px) {
+        main { grid-template-columns: 1fr; }
+        .form-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a class="back-link" href="/">&larr; Back to SafeLanding</a>
+      <h1>SafeLanding AI Threat Intel</h1>
+      <p>Retrieve housing scam patterns, verified case analogues, and knowledge gaps for chatbot grounding.</p>
+    </header>
+    <main>
+      <section>
+        <h2>Real Scam Report Intake</h2>
+        <div class="form-grid">
+          <label class="full" for="title">Report title
+            <input id="title" value="Suspicious room offer">
+          </label>
+          <label for="rentalOfferType">Rental offer type
+            <select id="rentalOfferType">
+              <option>Direct landlord</option>
+              <option>Roommate invite</option>
+              <option>Student sublet</option>
+              <option>Housing group admin</option>
+              <option>Rental agency</option>
+              <option>Other</option>
+              <option>Unknown</option>
+            </select>
+          </label>
+          <label for="communicationChannel">Channel
+            <select id="communicationChannel">
+              <option>WhatsApp</option>
+              <option>Facebook</option>
+              <option>Website</option>
+              <option>Instagram</option>
+              <option>Email</option>
+              <option>Telegram</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label id="communicationChannelOtherWrap" class="full hidden" for="communicationChannelOther">Other channel
+            <input id="communicationChannelOther" placeholder="Tell us where the contact happened">
+          </label>
+          <label for="offeringPersonName">Name of offering person
+            <input id="offeringPersonName" value="Unknown">
+          </label>
+          <label for="offeringContactValue">Contact info
+            <input id="offeringContactValue" placeholder="Phone, email, handle, profile URL">
+          </label>
+          <label for="firstContactDate">First contact date
+            <input id="firstContactDate" type="date">
+          </label>
+          <label for="requestedMoveInDate">Requested move-in date
+            <input id="requestedMoveInDate" type="date">
+          </label>
+          <label for="city">City in listing
+            <select id="city">
+              <option>Amsterdam</option>
+              <option>Delft</option>
+              <option>Eindhoven</option>
+              <option>Rotterdam</option>
+              <option>Utrecht</option>
+              <option>Groningen</option>
+              <option>Leiden</option>
+              <option>Maastricht</option>
+              <option>The Hague</option>
+              <option>Tilburg</option>
+              <option>Nijmegen</option>
+              <option>Enschede</option>
+              <option>Other</option>
+              <option>Unknown</option>
+            </select>
+          </label>
+          <label id="cityOtherWrap" class="hidden" for="cityOther">Other city
+            <input id="cityOther" placeholder="City name">
+          </label>
+          <label for="street">Street
+            <input id="street" placeholder="Street name">
+          </label>
+          <label for="houseNumber">House number and addition
+            <input id="houseNumber" placeholder="e.g. 12B">
+          </label>
+          <label for="postcode">Postcode
+            <input id="postcode" placeholder="e.g. 1012 AB">
+          </label>
+          <label class="full" for="listingUrl">Listing or profile URL
+            <input id="listingUrl" placeholder="https://...">
+          </label>
+          <label for="paymentRequested">Payment requested
+            <input id="paymentRequested" value="Reservation fee before viewing">
+          </label>
+          <label for="amountRequested">Amount requested
+            <input id="amountRequested" placeholder="e.g. EUR 800">
+          </label>
+          <label class="full" for="description">What happened?
+            <textarea id="description">The person says there are many applicants and wants a reservation fee before any viewing.</textarea>
+          </label>
+          <label class="full" for="uploadedText">Copied message or evidence text
+            <textarea id="uploadedText" placeholder="Paste suspicious messages, listing text, payment instructions, etc."></textarea>
+            <span class="hint">You can paste chat history or listing text here.</span>
+          </label>
+          <label class="full" for="evidenceFiles">Screenshots or chat history files
+            <input id="evidenceFiles" type="file" multiple accept="image/*,.pdf,.txt,.csv,.json">
+            <span class="hint">For this hackathon MVP we store file names and metadata. AI/OCR analysis can be connected later.</span>
+          </label>
+          <label class="full" for="aiOcrAnalysis">AI/OCR analysis placeholder
+            <textarea id="aiOcrAnalysis" placeholder="Future AI/OCR summary or extracted text can appear here."></textarea>
+          </label>
+          <div class="full">
+            <strong>Red flags observed</strong>
+            <div class="checkbox-grid" id="redFlagsObserved">
+              <label><input type="checkbox" value="Payment before viewing">Payment before viewing</label>
+              <label><input type="checkbox" value="Pressure to decide today">Pressure to decide today</label>
+              <label><input type="checkbox" value="Many applicants / scarcity pressure">Many applicants / scarcity pressure</label>
+              <label><input type="checkbox" value="No live or in-person viewing">No live or in-person viewing</label>
+              <label><input type="checkbox" value="Landlord or offerer is abroad">Landlord or offerer is abroad</label>
+              <label><input type="checkbox" value="Payment to a different name">Payment to a different name</label>
+              <label><input type="checkbox" value="No contract or vague contract">No contract or vague contract</label>
+              <label><input type="checkbox" value="Passport or ID requested too early">Passport or ID requested too early</label>
+              <label><input type="checkbox" value="No registration possible">No registration possible</label>
+              <label><input type="checkbox" value="Listing looks too cheap">Listing looks too cheap</label>
+            </div>
+            <label class="full" for="redFlagOther" style="margin-top:10px;">Other red flags
+              <input id="redFlagOther" placeholder="Add anything else suspicious">
+            </label>
+          </div>
+        </div>
+        <button id="report">Submit Pending Report</button>
+        <pre id="raw">No result yet.</pre>
+      </section>
+    </main>
+    <script>
+      const raw = document.querySelector("#raw");
+      const channel = document.querySelector("#communicationChannel");
+      const channelOtherWrap = document.querySelector("#communicationChannelOtherWrap");
+      const city = document.querySelector("#city");
+      const cityOtherWrap = document.querySelector("#cityOtherWrap");
+
+      function toggleOther(select, wrapper) {
+        wrapper.classList.toggle("hidden", select.value !== "Other");
+      }
+
+      channel.addEventListener("change", () => toggleOther(channel, channelOtherWrap));
+      city.addEventListener("change", () => toggleOther(city, cityOtherWrap));
+
+      document.querySelector("#report").addEventListener("click", async () => {
+        const selectedCity = city.value === "Other" ? document.querySelector("#cityOther").value : city.value;
+        const addressParts = [
+          document.querySelector("#street").value,
+          document.querySelector("#houseNumber").value,
+          document.querySelector("#postcode").value,
+          selectedCity
+        ].filter(Boolean);
+        const files = Array.from(document.querySelector("#evidenceFiles").files).map(file => ({
+          name: file.name,
+          type: file.type,
+          size: file.size
+        }));
+        const selectedRedFlags = Array.from(document.querySelectorAll("#redFlagsObserved input:checked")).map(input => input.value);
+        const otherRedFlag = document.querySelector("#redFlagOther").value.trim();
+        if (otherRedFlag) selectedRedFlags.push(otherRedFlag);
+        const response = await fetch("/api/reports", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            Title: document.querySelector("#title").value,
+            Description: document.querySelector("#description").value,
+            Rental_Offer_Type: document.querySelector("#rentalOfferType").value,
+            Communication_Channel: channel.value,
+            Communication_Channel_Other: document.querySelector("#communicationChannelOther").value,
+            Offering_Person_Name: document.querySelector("#offeringPersonName").value,
+            Offering_Contact_Value: document.querySelector("#offeringContactValue").value,
+            First_Contact_Date: document.querySelector("#firstContactDate").value,
+            Requested_Move_In_Date: document.querySelector("#requestedMoveInDate").value,
+            City: selectedCity,
+            Listing_Address: addressParts.join(", "),
+            Listing_URL: document.querySelector("#listingUrl").value,
+            Payment_Requested: document.querySelector("#paymentRequested").value,
+            Amount_Requested: document.querySelector("#amountRequested").value,
+            Uploaded_Text: document.querySelector("#uploadedText").value,
+            Evidence_Files: files,
+            AI_OCR_Analysis: document.querySelector("#aiOcrAnalysis").value,
+            Red_Flags_Observed: selectedRedFlags,
+            Location: "Netherlands"
+          })
+        });
+        raw.textContent = JSON.stringify(await response.json(), null, 2);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+[
+  {
+    "Report_ID": "UR0001",
+    "Timestamp": "2026-06-13T12:59:18.510945+00:00",
+    "Title": "Suspicious room offer",
+    "Description": "The person says there are many applicants and wants a reservation fee before any viewing.",
+    "Scam_Category": "Housing Scam",
+    "Location": "Netherlands",
+    "Uploaded_Text": "",
+    "Uploaded_URL": "",
+    "Estimated_Loss": "",
+    "Threat_Actor": "Unknown",
+    "Review_Status": "Pending"
+  },
+  {
+    "Report_ID": "UR0002",
+    "Timestamp": "2026-06-13T13:06:34.451330+00:00",
+    "Title": "Suspicious room offer",
+    "Description": "The person says there are many applicants and wants a reservation fee before any viewing.",
+    "Scam_Category": "Housing Scam",
+    "Rental_Offer_Type": "Direct landlord",
+    "Location": "Netherlands",
+    "City": "",
+    "Listing_Address": "Pastoor Petersstraat 3, 5612WL, Eindhoven",
+    "Listing_URL": "",
+    "First_Contact_Date": "2026-06-15",
+    "Requested_Move_In_Date": "2026-06-15",
+    "Offering_Person_Name": "Unknown",
+    "Offering_Person_Role": "",
+    "Offering_Contact_Method": "",
+    "Offering_Contact_Value": "+31693311824",
+    "Communication_Channel": "WhatsApp",
+    "Payment_Requested": "Reservation fee before viewing",
+    "Payment_Method": "",
+    "Amount_Requested": "845",
+    "Amount_Paid": "",
+    "Threat_Actor": "Unknown",
+    "Red_Flags_Observed": [
+      "Payment before viewing",
+      "Pressure to decide today"
+    ],
+    "Uploaded_Text": "",
+    "Evidence_URLs": [],
+    "Reporter_Notes": "",
+    "Review_Status": "Pending"
+  }
+]

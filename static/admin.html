@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SafeLanding Admin Database</title>
+    <style>
+      @font-face {
+        font-family: "Instrument Sans";
+        src: url("/assets/fonts/InstrumentSans-Variable.ttf") format("truetype");
+        font-weight: 400 700;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Roboto";
+        src: url("/assets/fonts/Roboto-Variable.ttf") format("truetype");
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: swap;
+      }
+      :root {
+        color-scheme: light;
+        --bg: #fff9f4;
+        --panel: #ffffff;
+        --ink: #393232;
+        --muted: #8a8280;
+        --line: #f0e2d4;
+        --accent: #eb8e37;
+        --accent-soft: #fbeada;
+        --warn: #92400e;
+        --font-head: "Instrument Sans", "Roboto", sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Roboto", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 22px clamp(18px, 4vw, 48px);
+        background: var(--panel);
+        border-bottom: 1px solid var(--line);
+      }
+      h1, h2, h3, button, label { font-family: var(--font-head); }
+      h1 { margin: 0 0 4px; font-size: clamp(24px, 3vw, 34px); letter-spacing: 0; font-weight: 700; }
+      p { margin: 0; color: var(--muted); line-height: 1.5; }
+      a { color: var(--accent); font-weight: 700; text-decoration: none; }
+      main {
+        padding: 20px clamp(18px, 4vw, 48px);
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+        min-width: 0;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .stat {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+      }
+      .stat strong { display: block; font-size: 26px; }
+      .tabs, .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        padding: 9px 12px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button.active {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #fff;
+      }
+      input, select, textarea {
+        flex: 1;
+        min-width: 220px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 12px;
+        font: inherit;
+      }
+      textarea {
+        width: 100%;
+        min-height: 90px;
+        resize: vertical;
+      }
+      label {
+        display: block;
+        margin-top: 10px;
+        font-weight: 700;
+      }
+      label span {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .save {
+        width: 100%;
+        margin-top: 12px;
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #fff;
+      }
+      .table-wrap {
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 820px;
+      }
+      th, td {
+        border-bottom: 1px solid var(--line);
+        padding: 10px 12px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 14px;
+      }
+      th {
+        position: sticky;
+        top: 0;
+        background: #fdf3e9;
+        z-index: 1;
+      }
+      tr:hover td { background: #fdf6ef; }
+      .status {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 3px 8px;
+        background: var(--accent-soft);
+        color: #9a5a17;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .pending { background: #fff7ed; color: var(--warn); }
+      .same-count {
+        display: inline-block;
+        min-width: 30px;
+        border-radius: 999px;
+        padding: 3px 8px;
+        background: #fdebd3;
+        color: #b5651d;
+        font-weight: 800;
+        text-align: center;
+      }
+      .inline-note {
+        width: 260px;
+        min-width: 220px;
+        min-height: 42px;
+        padding: 8px;
+      }
+      .inline-status {
+        min-width: 150px;
+        padding: 8px;
+      }
+      .group-row {
+        cursor: pointer;
+        font-weight: 650;
+      }
+      .child-row td {
+        background: #fdf6ef;
+        color: var(--muted);
+      }
+      .child-row td:first-child {
+        padding-left: 28px;
+        color: var(--ink);
+        font-weight: 700;
+      }
+      .danger {
+        border-color: #dc2626;
+        color: #b91c1c;
+      }
+      .modal-backdrop {
+        align-items: center;
+        background: rgba(57, 50, 50, 0.35);
+        display: none;
+        inset: 0;
+        justify-content: center;
+        padding: 20px;
+        position: fixed;
+        z-index: 10;
+      }
+      .modal-backdrop.open { display: flex; }
+      .modal {
+        background: var(--panel);
+        border-radius: 8px;
+        max-height: 90vh;
+        max-width: 760px;
+        overflow: auto;
+        padding: 18px;
+        width: min(760px, 100%);
+      }
+      .modal-head {
+        align-items: start;
+        display: flex;
+        gap: 12px;
+        justify-content: space-between;
+      }
+      .modal-head h2 {
+        margin: 0;
+        font-size: 20px;
+      }
+      .report-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 12px;
+        background: #fff;
+      }
+      .report-card h3 {
+        margin: 0 0 6px;
+        font-size: 15px;
+      }
+      .mini {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      aside {
+        align-self: start;
+        position: sticky;
+        top: 16px;
+      }
+      pre {
+        max-height: 70vh;
+        overflow: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #fdf3e9;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 13px;
+      }
+      .empty {
+        padding: 24px;
+        color: var(--muted);
+        text-align: center;
+      }
+      @media (max-width: 980px) {
+        aside { position: static; }
+        .stats { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>SafeLanding Admin Database</h1>
+        <p>Inspect reports, reference cases, scam patterns, and knowledge gaps.</p>
+      </div>
+      <a href="/">Report intake</a>
+    </header>
+    <main>
+      <section>
+        <div class="stats" id="stats"></div>
+        <div class="panel">
+          <div class="tabs" id="tabs"></div>
+          <div class="toolbar">
+            <input id="search" placeholder="Search current table">
+            <button id="export">Export JSON</button>
+          </div>
+          <div class="table-wrap" id="table"></div>
+        </div>
+      </section>
+    </main>
+    <div id="editor" hidden></div>
+    <pre id="detail" hidden>No record selected.</pre>
+    <div class="modal-backdrop" id="reportModal">
+      <div class="modal">
+        <div class="modal-head">
+          <div>
+            <h2>Edit Independent Report</h2>
+            <p>Double-click a child report row to edit review status, notes, feedback, or delete it.</p>
+          </div>
+          <button id="closeReportModal">Close</button>
+        </div>
+        <div id="modalEditor"></div>
+      </div>
+    </div>
+    <script>
+      const datasets = {
+        reports: {
+          label: "User Reports",
+          endpoint: "/api/reports",
+          id: "Report_ID",
+          updateEndpoint: "/api/reports/",
+          columns: ["Group_ID", "Review_Status", "Report_Count", "Identifier", "Rental_Offer_Type", "Offering_Person_Name", "Contact_Info", "Listing_Address", "Payment_Requested", "Admin_Notes"]
+        },
+        cases: {
+          label: "Reference Cases",
+          endpoint: "/api/cases",
+          id: "Case_ID",
+          updateEndpoint: "/api/cases/",
+          columns: ["Case_ID", "Title", "City", "Subcategory", "Threat_Actor", "Requested_Action", "Summary"]
+        },
+        patterns: {
+          label: "Patterns",
+          endpoint: "/api/patterns",
+          id: "Pattern_ID",
+          columns: ["Pattern_ID", "Pattern_Name", "Typical_Threat_Actor", "Common_Channels", "Knowledge_Gaps"]
+        },
+        gaps: {
+          label: "Knowledge Gaps",
+          endpoint: "/api/knowledge-gaps",
+          id: "Gap_ID",
+          columns: ["Gap_ID", "Gap_Name", "Description", "Safe_Guidance", "Related_Patterns"]
+        }
+      };
+      const state = { active: "reports", rows: {}, filtered: [] };
+      const tabs = document.querySelector("#tabs");
+      const stats = document.querySelector("#stats");
+      const table = document.querySelector("#table");
+      const detail = document.querySelector("#detail");
+      const editor = document.querySelector("#editor");
+      const reportModal = document.querySelector("#reportModal");
+      const modalEditor = document.querySelector("#modalEditor");
+      const search = document.querySelector("#search");
+      const expandedGroups = new Set();
+
+      function flatten(value) {
+        if (Array.isArray(value)) return value.join(", ");
+        if (value && typeof value === "object") return JSON.stringify(value);
+        return value ?? "";
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
+      }
+
+      function normalizePhone(value) {
+        let digits = String(value || "").replace(/\D/g, "");
+        if (digits.startsWith("0031")) digits = `31${digits.slice(4)}`;
+        if (digits.startsWith("0") && digits.length >= 10) digits = `31${digits.slice(1)}`;
+        return digits;
+      }
+
+      function normalizeAddress(value) {
+        return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
+      }
+
+      function normalizeName(value) {
+        return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
+      }
+
+      function sameScamKeys(row) {
+        const keys = [];
+        const contact = String(row.Offering_Contact_Value || "");
+        const email = contact.match(/\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b/i);
+        const phone = normalizePhone(contact);
+        const address = normalizeAddress(row.Listing_Address || "");
+        const name = normalizeName(row.Offering_Person_Name || "");
+        if (email) keys.push(`email:${email[0].toLowerCase()}`);
+        if (phone.length >= 10) keys.push(`phone:${phone}`);
+        if (address.length >= 8) keys.push(`address:${address}`);
+        if (name.length >= 3 && name !== "unknown") keys.push(`name:${name}`);
+        return keys;
+      }
+
+      function keyType(key) {
+        return String(key || "").split(":", 1)[0] || "identifier";
+      }
+
+      function keyValue(key) {
+        const text = String(key || "");
+        return text.includes(":") ? text.slice(text.indexOf(":") + 1) : text;
+      }
+
+      function keyTypeLabel(type) {
+        return {
+          name: "landlord/name",
+          phone: "phone",
+          email: "email",
+          address: "address",
+        }[type] || type;
+      }
+
+      function groupIdentifier(sharedKeys, reportCount) {
+        if (reportCount <= 1) return "Unique report";
+        const types = [...new Set(sharedKeys.map(key => keyTypeLabel(keyType(key))))];
+        return types.length ? `Shared ${types.join(", ")}` : "Merged reports";
+      }
+
+      function reportMergeReason(report, group) {
+        const reportKeys = new Set(sameScamKeys(report));
+        const matchingKeys = (group.Shared_Keys || []).filter(key => reportKeys.has(key));
+        if (!matchingKeys.length) return "Part of merged group";
+        return matchingKeys
+          .map(key => `${keyTypeLabel(keyType(key))}: ${keyValue(key)}`)
+          .join("; ");
+      }
+
+      function groupKeyForReport(row) {
+        return sameScamKeys(row)[0] || `single:${row.Report_ID}`;
+      }
+
+      function buildReportGroups(rows) {
+        const groups = {};
+        const keyToGroup = {};
+        let counter = 1;
+        rows.forEach(row => {
+          const keys = sameScamKeys(row);
+          const existingGroupIds = [...new Set(keys.map(key => keyToGroup[key]).filter(Boolean))];
+          const existingGroupId = existingGroupIds[0];
+          const groupId = existingGroupId || (keys[0] || `single:${row.Report_ID}`);
+          if (!groups[groupId]) {
+            groups[groupId] = {
+              Group_ID: `SG${String(counter).padStart(3, "0")}`,
+              Identifier: groupId.startsWith("single:") ? "No landlord/phone/email/address" : groupId,
+              Identifier_Keys: keys,
+              Reports: [],
+            };
+            counter += 1;
+          }
+          existingGroupIds.slice(1).forEach(mergeId => {
+            if (!groups[mergeId] || mergeId === groupId) return;
+            groups[groupId].Reports.push(...groups[mergeId].Reports);
+            groups[groupId].Identifier_Keys.push(...groups[mergeId].Identifier_Keys);
+            groups[mergeId].Identifier_Keys.forEach(key => {
+              keyToGroup[key] = groupId;
+            });
+            delete groups[mergeId];
+          });
+          groups[groupId].Reports.push(row);
+          keys.forEach(key => {
+            keyToGroup[key] = groupId;
+          });
+        });
+        return Object.values(groups).map(group => {
+          const reports = group.Reports;
+          const statuses = [...new Set(reports.map(report => report.Review_Status || "Pending"))];
+          const keyCounts = {};
+          reports.forEach(report => {
+            sameScamKeys(report).forEach(key => {
+              keyCounts[key] = (keyCounts[key] || 0) + 1;
+            });
+          });
+          const sharedKeys = Object.keys(keyCounts).filter(key => keyCounts[key] > 1);
+          return {
+            ...group,
+            Row_Type: "group",
+            Identifier: groupIdentifier(sharedKeys, reports.length),
+            Shared_Keys: sharedKeys,
+            Report_Count: reports.length,
+            Report_IDs: reports.map(report => report.Report_ID),
+            Review_Status: statuses.length === 1 ? statuses[0] : `Mixed (${statuses.join(", ")})`,
+            Rental_Offer_Type: "",
+            Offering_Person_Name: "",
+            Contact_Info: "",
+            Listing_Address: "",
+            Payment_Requested: "",
+            Admin_Notes: [...new Set(reports.map(report => report.Admin_Notes).filter(Boolean))].join(" | "),
+          };
+        });
+      }
+
+      function reportChildRow(report, group) {
+        return {
+          ...report,
+          Row_Type: "report",
+          Group_ID: report.Report_ID,
+          Identifier: reportMergeReason(report, group),
+          Report_Count: "",
+          Contact_Info: report.Offering_Contact_Value || "",
+          Admin_Notes: report.Admin_Notes || "",
+        };
+      }
+
+      function flattenReportRows(groups) {
+        const output = [];
+        groups.forEach(group => {
+          output.push(group);
+          if (expandedGroups.has(group.Group_ID)) {
+            group.Reports.forEach(report => output.push(reportChildRow(report, group)));
+          }
+        });
+        return output;
+      }
+
+      function toggleReportGroup(groupId) {
+        if (expandedGroups.has(groupId)) {
+          expandedGroups.delete(groupId);
+        } else {
+          expandedGroups.add(groupId);
+        }
+        renderTable();
+      }
+
+      async function loadAll() {
+        await Promise.all(Object.entries(datasets).map(async ([key, config]) => {
+          const response = await fetch(config.endpoint);
+          state.rows[key] = await response.json();
+        }));
+        renderStats();
+        renderTabs();
+        renderTable();
+      }
+
+      function renderStats() {
+        stats.innerHTML = Object.entries(datasets).map(([key, config]) => `
+          <div class="stat">
+            <strong>${state.rows[key]?.length ?? 0}</strong>
+            <span>${config.label}</span>
+          </div>
+        `).join("");
+      }
+
+      function renderTabs() {
+        tabs.innerHTML = Object.entries(datasets).map(([key, config]) => `
+          <button class="${key === state.active ? "active" : ""}" data-tab="${key}">
+            ${config.label}
+          </button>
+        `).join("");
+        tabs.querySelectorAll("button").forEach(button => {
+          button.addEventListener("click", () => {
+            state.active = button.dataset.tab;
+            search.value = "";
+            editor.innerHTML = "";
+            detail.textContent = "No record selected.";
+            renderTabs();
+            renderTable();
+          });
+        });
+      }
+
+      function renderTable() {
+        const config = datasets[state.active];
+        const query = search.value.trim().toLowerCase();
+        const baseRows = state.active === "reports"
+          ? buildReportGroups(state.rows.reports || [])
+          : state.rows[state.active] || [];
+        const matchedRows = baseRows.filter(row => JSON.stringify(row).toLowerCase().includes(query));
+        state.filtered = state.active === "reports" ? flattenReportRows(matchedRows) : matchedRows;
+        if (!state.filtered.length) {
+          table.innerHTML = `<div class="empty">No ${config.label.toLowerCase()} found.</div>`;
+          return;
+        }
+        table.innerHTML = `
+          <table>
+            <thead>
+              <tr>${config.columns.map(column => `<th>${column}</th>`).join("")}</tr>
+            </thead>
+            <tbody>
+              ${state.filtered.map((row, index) => `
+                <tr data-index="${index}" class="${row.Row_Type === "group" ? "group-row" : row.Row_Type === "report" ? "child-row" : ""}" title="${row.Row_Type === "group" ? "Click to expand/collapse reports" : row.Row_Type === "report" ? "Double-click to edit this independent report" : ""}">
+                  ${config.columns.map(column => {
+                    const value = flatten(row[column]);
+                    if (state.active === "reports" && column === "Report_Count") {
+                      return `<td>${row.Row_Type === "group" ? `<span class="same-count" title="Independent reports with the same landlord/name, phone number, email address, or house address">${escapeHtml(value)}</span>` : ""}</td>`;
+                    }
+                    if (state.active === "reports" && column === "Group_ID" && row.Row_Type === "group") {
+                      const symbol = expandedGroups.has(row.Group_ID) ? "[-]" : "[+]";
+                      return `<td>${symbol} ${escapeHtml(value)}</td>`;
+                    }
+                    return `<td>${escapeHtml(value)}</td>`;
+                  }).join("")}
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+        table.querySelectorAll("tbody tr").forEach(row => {
+          row.addEventListener("click", () => {
+            const record = state.filtered[Number(row.dataset.index)];
+            detail.textContent = JSON.stringify(record, null, 2);
+            if (state.active === "reports" && record.Row_Type === "group") {
+              toggleReportGroup(record.Group_ID);
+              return;
+            }
+            if (state.active !== "reports") {
+              renderEditor(record);
+            }
+          });
+          row.addEventListener("dblclick", () => {
+            const record = state.filtered[Number(row.dataset.index)];
+            if (state.active === "reports" && record.Row_Type === "report") {
+              openReportModal(record);
+            }
+          });
+        });
+      }
+
+      function renderInlineStatus(row) {
+        const disabled = row.Report_IDs?.length ? "" : "disabled";
+        return `
+          <select class="inline-status" data-report-ids="${escapeHtml((row.Report_IDs || []).join(","))}" data-inline-field="Review_Status" ${disabled}>
+            ${["Pending", "Verified", "Rejected", "Needs More Info", "Likely False Alert"].map(status => `
+              <option ${row.Review_Status === status ? "selected" : ""}>${status}</option>
+            `).join("")}
+          </select>
+        `;
+      }
+
+      function renderInlineAdminNotes(row) {
+        return `<textarea class="inline-note" data-report-ids="${escapeHtml((row.Report_IDs || []).join(","))}" data-inline-field="Admin_Notes">${escapeHtml(row.Admin_Notes || "")}</textarea>`;
+      }
+
+      async function saveInlineReportField(reportIds, field, value) {
+        const ids = String(reportIds || "").split(",").filter(Boolean);
+        await Promise.all(ids.map(reportId => saveRecord(`${datasets.reports.updateEndpoint}${encodeURIComponent(reportId)}`, { [field]: value }, false)));
+        await refreshActive();
+      }
+
+      function renderEditor(record) {
+        if (state.active === "reports") {
+          editor.innerHTML = "";
+        } else if (state.active === "cases") {
+          editor.innerHTML = `
+            <label><span>Edit reference case JSON</span>
+              <textarea id="editCaseJson" style="min-height:260px;">${escapeHtml(JSON.stringify(record, null, 2))}</textarea>
+            </label>
+            <button class="save" id="saveRecord">Save Case Changes</button>
+          `;
+          document.querySelector("#saveRecord").addEventListener("click", () => saveCase(record.Case_ID));
+        } else {
+          editor.innerHTML = "";
+        }
+      }
+
+      async function saveReport(reportId) {
+        const root = document.querySelector(`[data-report-form="${CSS.escape(reportId)}"]`);
+        const payload = {
+          Review_Status: root.querySelector("[data-field='Review_Status']").value,
+          Threat_Actor: root.querySelector("[data-field='Threat_Actor']").value,
+          Rental_Offer_Type: root.querySelector("[data-field='Rental_Offer_Type']").value,
+          Red_Flags_Observed: root.querySelector("[data-field='Red_Flags_Observed']").value,
+          Admin_Notes: root.querySelector("[data-field='Admin_Notes']").value,
+          Reporter_Feedback: root.querySelector("[data-field='Reporter_Feedback']").value
+        };
+        await saveRecord(`${datasets.reports.updateEndpoint}${encodeURIComponent(reportId)}`, payload);
+        closeReportModal();
+      }
+
+      function openReportModal(report) {
+        modalEditor.innerHTML = renderReportForm(report);
+        modalEditor.querySelector("[data-save-report]").addEventListener("click", () => saveReport(report.Report_ID));
+        modalEditor.querySelector("[data-delete-report]").addEventListener("click", () => deleteReport(report.Report_ID));
+        reportModal.classList.add("open");
+      }
+
+      function closeReportModal() {
+        reportModal.classList.remove("open");
+        modalEditor.innerHTML = "";
+      }
+
+      function renderReportForm(report) {
+        return `
+          <div class="report-card" data-report-form="${escapeHtml(report.Report_ID)}">
+            <h3>${escapeHtml(report.Report_ID)} - ${escapeHtml(report.Title || "Untitled report")}</h3>
+            <div class="mini">${escapeHtml(report.Timestamp || "")}</div>
+            <label><span>Review status</span>
+              <select data-field="Review_Status">
+                ${["Pending", "Verified", "Rejected", "Needs More Info", "Likely False Alert"].map(status => `
+                  <option ${report.Review_Status === status ? "selected" : ""}>${status}</option>
+                `).join("")}
+              </select>
+            </label>
+            <label><span>Admin notes</span>
+              <textarea data-field="Admin_Notes">${escapeHtml(report.Admin_Notes || "")}</textarea>
+            </label>
+            <label><span>Feedback to reporter</span>
+              <textarea data-field="Reporter_Feedback">${escapeHtml(report.Reporter_Feedback || "")}</textarea>
+            </label>
+            <label><span>Threat actor</span>
+              <input data-field="Threat_Actor" value="${escapeHtml(report.Threat_Actor || "")}">
+            </label>
+            <label><span>Rental offer type</span>
+              <input data-field="Rental_Offer_Type" value="${escapeHtml(report.Rental_Offer_Type || "")}">
+            </label>
+            <label><span>Red flags observed, one per line</span>
+              <textarea data-field="Red_Flags_Observed">${escapeHtml(flatten(report.Red_Flags_Observed))}</textarea>
+            </label>
+            <pre>${escapeHtml(JSON.stringify(report, null, 2))}</pre>
+            <button class="save" data-save-report="${escapeHtml(report.Report_ID)}">Save Admin Notes / Review</button>
+            <button class="danger" data-delete-report="${escapeHtml(report.Report_ID)}">Delete This Report</button>
+          </div>
+        `;
+      }
+
+      async function saveCase(caseId) {
+        let payload;
+        try {
+          payload = JSON.parse(document.querySelector("#editCaseJson").value);
+        } catch (error) {
+          detail.textContent = `Invalid case JSON: ${error.message}`;
+          return;
+        }
+        await saveRecord(`${datasets.cases.updateEndpoint}${encodeURIComponent(caseId)}`, payload);
+      }
+
+      async function deleteReport(reportId) {
+        const response = await fetch(`${datasets.reports.updateEndpoint}${encodeURIComponent(reportId)}`, {
+          method: "DELETE"
+        });
+        const data = await response.json();
+        detail.textContent = JSON.stringify(data, null, 2);
+        closeReportModal();
+        await refreshActive();
+      }
+
+      async function saveRecord(endpoint, payload, refresh = true) {
+        const response = await fetch(endpoint, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        detail.textContent = JSON.stringify(data, null, 2);
+        if (refresh) await refreshActive();
+      }
+
+      async function refreshActive() {
+        const config = datasets[state.active];
+        const response = await fetch(config.endpoint);
+        state.rows[state.active] = await response.json();
+        renderStats();
+        renderTable();
+      }
+
+      search.addEventListener("input", renderTable);
+      document.querySelector("#closeReportModal").addEventListener("click", closeReportModal);
+      reportModal.addEventListener("click", event => {
+        if (event.target === reportModal) closeReportModal();
+      });
+      document.querySelector("#export").addEventListener("click", () => {
+        const payload = JSON.stringify(state.filtered, null, 2);
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `safelanding-${state.active}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+      });
+
+      loadAll().catch(error => {
+        table.innerHTML = `<div class="empty">Failed to load database: ${escapeHtml(error.message)}</div>`;
+      });
+    </script>
+  </body>
+</html>

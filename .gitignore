@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Generated at runtime; seeded from the JSON files in data/
+data/safelanding.db
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Local env / secrets
+.env
+.claude/

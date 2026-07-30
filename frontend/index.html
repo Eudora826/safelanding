@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<!--
+  index.html - SafeLanding rental-scam assistant (text + link + multiple images)
+  Visual design follows the SafeLanding UI/UX mockups: warm cream background,
+  orange accent, Instrument Sans (headings) + Roboto (body).
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeLanding - Rental Scam Assistant</title>
+  <style>
+    @font-face {
+      font-family: "Instrument Sans";
+      src: url("assets/fonts/InstrumentSans-Variable.ttf") format("truetype");
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Roboto";
+      src: url("assets/fonts/Roboto-Variable.ttf") format("truetype");
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #fff9f4;
+      --card: #ffffff;
+      --text: #393232;
+      --text-soft: #4c4544;
+      --muted: #aca6a2;
+      --border: #f0e2d4;
+      --accent: #eb8e37;
+      --accent-dark: #d97b28;
+      --accent-soft: #fbeada;
+      --gradient-start: #fcc99a;
+      --gradient-end: #fff9f4;
+      --risk: #f4a152;
+      --safe: #4f9d69;
+      --suspicious: #eb8e37;
+      --dangerous: #df5b3b;
+      --r-lg: 28px;
+      --r-md: 18px;
+      --r-pill: 999px;
+      --font-head: "Instrument Sans", "Roboto", sans-serif;
+      --font-body: "Roboto", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+    }
+    a { color: inherit; }
+    img { max-width: 100%; }
+
+    /* ---------------------------------------------------------------- header */
+    .site-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 28px 48px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-head); font-weight: 700; font-size: 20px;
+      text-decoration: none; color: var(--text);
+    }
+    .brand-logo { height: 32px; width: auto; display: block; }
+    .site-nav { display: flex; gap: 36px; }
+    .site-nav a {
+      font-family: var(--font-head); font-size: 17px; color: var(--muted);
+      text-decoration: none; transition: color .15s;
+    }
+    .site-nav a:hover, .site-nav a.active { color: var(--text); }
+
+    /* ------------------------------------------------------------------ hero */
+    .hero {
+      display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px;
+      align-items: start; max-width: 1280px; margin: 0 auto;
+      padding: 24px 48px 72px;
+    }
+    .hero h1 {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: clamp(32px, 4.2vw, 52px); line-height: 1.18;
+      margin: 0 0 32px;
+    }
+    .hero h1 .accent { color: var(--accent); }
+
+    .input-pill {
+      display: flex; align-items: center; background: var(--card);
+      border: 1px solid var(--border); border-radius: var(--r-pill);
+      padding: 8px 8px 8px 26px; gap: 10px;
+      box-shadow: 0 12px 32px -16px rgba(235, 142, 55, .35);
+    }
+    .input-pill textarea {
+      flex: 1; border: none; outline: none; resize: none; background: transparent;
+      font-family: var(--font-body); font-size: 17px; color: var(--text);
+      padding: 14px 0; max-height: 160px; line-height: 1.5;
+    }
+    .input-pill textarea::placeholder { color: var(--muted); }
+    .send-btn {
+      width: 46px; height: 46px; border-radius: 50%; border: none;
+      background: var(--accent); color: #fff; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .send-btn:hover { background: var(--accent-dark); }
+    .send-btn:active { transform: scale(.94); }
+    .send-btn:disabled { opacity: .5; cursor: default; }
+    .send-btn svg { width: 18px; height: 18px; }
+
+    .upload-row { margin-top: 18px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .upload-btn {
+      display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--card);
+      border-radius: var(--r-pill); padding: 14px 26px;
+      font-family: var(--font-head); font-weight: 600; font-size: 16px;
+      color: var(--text); transition: border-color .15s, color .15s;
+    }
+    .upload-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .upload-btn input { display: none; }
+    .upload-btn .plus { font-size: 18px; font-weight: 700; line-height: 1; }
+    .upload-caption { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+    .preview { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .preview img {
+      width: 56px; height: 56px; object-fit: cover; border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .compose-textarea {
+      width: 100%; border: 1px solid var(--border); border-radius: var(--r-md);
+      padding: 14px 16px; font-family: var(--font-body); font-size: 15px; color: var(--text);
+      background: var(--bg); resize: vertical; min-height: 180px;
+    }
+    .compose-textarea:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+
+    .error-banner {
+      margin-top: 16px; padding: 12px 18px; border-radius: var(--r-md);
+      background: #fdece4; color: var(--dangerous); font-size: 14px; font-weight: 600;
+    }
+
+    /* ----------------------------------------------------------- info cards */
+    .info-cards { display: flex; gap: 20px; }
+    .info-card {
+      position: relative; flex: 1; border-radius: var(--r-lg); overflow: hidden;
+      min-height: 440px; color: #fff; background: #2a221c;
+    }
+    .info-card img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .info-card::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(38, 27, 17, .82) 0%, rgba(38, 27, 17, .18) 55%, rgba(38, 27, 17, 0) 100%);
+    }
+    .info-card .content { position: absolute; left: 0; right: 0; bottom: 0; padding: 26px; z-index: 1; }
+    .info-card h3 {
+      font-family: var(--font-head); font-weight: 700; font-size: 28px;
+      line-height: 1.15; margin: 0 0 10px;
+    }
+    .info-card p { font-size: 14px; margin: 0 0 6px; opacity: .95; }
+    .info-card .more {
+      font-size: 13px; max-height: 0; overflow: hidden; opacity: .95;
+      transition: max-height .25s ease; margin: 0;
+    }
+    .info-card.expanded .more { max-height: 240px; margin: 8px 0; }
+    .info-card .learn-more {
+      font-family: var(--font-head); font-weight: 700; font-size: 15px;
+      background: none; border: none; color: #fff; cursor: pointer; padding: 0;
+      margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;
+    }
+
+    /* ---------------------------------------------------------------- result */
+    .result-section { padding: 0 48px 72px; max-width: 1280px; margin: 0 auto; }
+    .result-title {
+      font-family: var(--font-head); font-weight: 700; text-align: center;
+      font-size: clamp(24px, 3vw, 36px); margin: 8px 0 8px;
+    }
+    .result-title .accent { color: var(--accent); }
+    .verdict-word.safe { color: var(--safe); }
+    .verdict-word.suspicious { color: var(--suspicious); }
+    .verdict-word.dangerous { color: var(--dangerous); }
+    .inputs-tag { text-align: center; color: var(--muted); font-size: 13px; margin: 0 0 28px; }
+
+    .result-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 32px; align-items: start; }
+
+    .original-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg);
+      padding: 28px; position: sticky; top: 24px;
+    }
+    .original-card h4 {
+      font-family: var(--font-head); font-size: 14px; text-transform: uppercase;
+      letter-spacing: .05em; color: var(--muted); margin: 0 0 14px;
+    }
+    .original-text { font-size: 15px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+    .original-text mark {
+      background: var(--accent-soft); color: var(--dangerous); border-radius: 4px;
+      padding: 0 3px; font-weight: 600;
+    }
+
+    .result-right { display: flex; flex-direction: column; gap: 28px; }
+
+    .gradient-card {
+      background: linear-gradient(180deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+      border-radius: var(--r-lg); padding: 36px 40px;
+    }
+    .summary-header { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; flex-wrap: wrap; }
+    .risk-count { font-family: var(--font-head); font-weight: 700; font-size: 20px; }
+    .meter {
+      flex: 1; min-width: 120px; height: 8px; background: rgba(255, 255, 255, .55);
+      border-radius: 999px; overflow: hidden;
+    }
+    .meter > span { display: block; height: 100%; background: var(--text); transition: width .4s; }
+    .score { font-size: 13px; color: var(--text-soft); white-space: nowrap; }
+    .summary-text { font-size: 15px; margin: 8px 0 0; color: var(--text-soft); }
+
+    .summary-checklist {
+      list-style: none; margin: 20px 0 0; padding: 0;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .summary-checklist li {
+      display: flex; align-items: center; gap: 12px;
+      font-family: var(--font-head); font-weight: 700; font-size: 16px; color: var(--text);
+    }
+    .summary-checklist .check-mark {
+      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+      background: var(--text); color: var(--gradient-end);
+      display: flex; align-items: center; justify-content: center; font-size: 13px;
+    }
+
+    .link-btn {
+      display: inline-flex; align-items: center; gap: 6px; margin-top: 22px;
+      font-family: var(--font-head); font-weight: 700; font-size: 16px;
+      background: none; border: none; color: var(--accent-dark); cursor: pointer; padding: 0;
+      text-decoration: none; transition: color .15s;
+    }
+    .link-btn:hover { color: var(--accent); }
+
+    .result-title + .gradient-card,
+    .result-title + .result-grid {
+      margin-top: 28px;
+    }
+
+    .db-warning {
+      margin-top: 18px; background: var(--accent-soft); border-radius: var(--r-md);
+      padding: 12px 16px; font-weight: 700; color: var(--dangerous); font-size: 14px;
+    }
+
+    .analyzing-block h3, .checklist-row-title {
+      font-family: var(--font-head); font-weight: 700; font-size: 24px; margin: 0 0 16px;
+    }
+    .checklist-row-title { margin: 48px 0 16px; }
+
+    .risk-cards { display: flex; flex-direction: column; gap: 16px; }
+    .risk-card { background: var(--risk); border-radius: var(--r-lg); padding: 24px 28px; color: var(--text-soft); }
+    .risk-card h4 {
+      font-family: var(--font-head); font-size: 20px; font-weight: 700;
+      margin: 0 0 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .risk-card .src-badge {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700;
+      background: rgba(255, 255, 255, .5); padding: 3px 10px; border-radius: 999px;
+    }
+    .risk-card .risk-snippet {
+      font-family: ui-monospace, "SFMono-Regular", monospace; font-size: 13px;
+      background: rgba(255, 255, 255, .45); border-radius: 8px; padding: 6px 10px;
+      display: inline-block; margin: 0 0 10px; word-break: break-all;
+    }
+    .risk-card .risk-explanation { margin: 0; font-size: 15px; }
+    .risk-card .risk-actions { margin-top: 14px; display: flex; gap: 20px; flex-wrap: wrap; }
+    .risk-card .risk-actions button, .risk-card .risk-actions a {
+      font-family: var(--font-head); font-weight: 700; font-size: 14px;
+      background: none; border: none; color: var(--text); cursor: pointer; padding: 0;
+      text-decoration: underline; text-decoration-color: rgba(57, 50, 50, .35);
+    }
+    .risk-card .risk-actions button:hover, .risk-card .risk-actions a:hover { color: #fff; }
+
+    .checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 18px; }
+    .checklist-grid h4 {
+      font-family: var(--font-head); font-size: 13px; text-transform: uppercase;
+      letter-spacing: .05em; color: var(--muted); margin: 0 0 10px;
+    }
+    .checklist-grid label {
+      display: flex; align-items: center; gap: 10px; font-size: 15px; margin: 0 0 10px;
+    }
+    .checklist-grid input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); }
+
+    .more-info { background: var(--accent-soft); border-radius: var(--r-md); padding: 22px 26px; }
+    .more-info h4 { font-family: var(--font-head); margin: 0 0 10px; }
+    .more-info ul { margin: 0; padding-left: 20px; }
+    .more-info li { margin: 8px 0; font-size: 15px; }
+    .more-info-group { margin: 0 0 18px; }
+    .more-info-group:last-child { margin-bottom: 0; }
+    .more-info-group h5 {
+      font-family: var(--font-head); font-weight: 700; font-size: 15px;
+      margin: 0 0 8px; color: var(--text);
+    }
+    .more-info-empty { margin: 0; font-size: 15px; color: var(--text-soft); }
+
+    .report-row { margin-top: 4px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .report-row button {
+      font-family: var(--font-head); font-weight: 700; font-size: 16px;
+      background: var(--accent); color: #fff; border: none; border-radius: var(--r-pill);
+      padding: 14px 28px; cursor: pointer; transition: background .15s;
+    }
+    .report-row button:hover { background: var(--accent-dark); }
+    .report-row button:disabled { opacity: .6; cursor: default; }
+    .report-ok { color: var(--safe); font-weight: 600; font-size: 14px; }
+
+    /* ----------------------------------------------------------- page sections */
+    .page-section { padding: 56px 48px; max-width: 1100px; margin: 0 auto; border-top: 1px solid var(--border); }
+    .page-section h2 {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: clamp(26px, 3vw, 38px); margin: 0 0 24px;
+    }
+    .page-section h2 .accent { color: var(--accent); }
+    .page-section .lede { color: var(--text-soft); max-width: 720px; margin: 0 0 28px; }
+
+    .card-list { display: flex; flex-direction: column; gap: 14px; }
+    .list-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 18px 22px; }
+    .list-card h4 { margin: 0 0 6px; font-family: var(--font-head); font-size: 17px; }
+    .list-card p { margin: 0; color: var(--text-soft); font-size: 14px; }
+    .list-card .meta { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .list-card .meta .status {
+      font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      color: var(--accent); margin-right: 8px;
+    }
+    .muted-note { color: var(--muted); font-size: 14px; }
+    .history-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .history-cols h3 { font-family: var(--font-head); font-size: 18px; margin: 0 0 14px; }
+
+    .howto-list { list-style: none; padding: 0; margin: 0 0 36px; display: flex; flex-direction: column; gap: 18px; }
+    .howto-list li { display: flex; gap: 16px; }
+    .howto-list .num { font-family: var(--font-head); font-weight: 700; font-size: 22px; color: var(--accent); flex-shrink: 0; width: 32px; }
+    .howto-list p { margin: 0; }
+    .howto-list.muted li { color: var(--muted); }
+    .howto-list.muted .num { color: var(--muted); }
+
+    .settings-grid { display: flex; flex-direction: column; gap: 28px; max-width: 480px; }
+    .settings-grid label { font-family: var(--font-head); font-weight: 700; font-size: 15px; color: var(--accent); display: block; margin-bottom: 8px; }
+    .settings-grid select {
+      width: 100%; font-family: var(--font-body); font-size: 15px; padding: 12px 16px;
+      border-radius: var(--r-md); border: 1px solid var(--border); background: var(--card); color: var(--text);
+    }
+    .settings-grid .field-hint { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+    .admin-link {
+      display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-head);
+      font-weight: 700; color: var(--text); border: 1px solid var(--border);
+      border-radius: var(--r-pill); padding: 12px 22px; text-decoration: none;
+      transition: border-color .15s, color .15s; width: fit-content;
+    }
+    .admin-link:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* -------------------------------------------------------------- utility bar */
+    .utility-bar {
+      display: flex; justify-content: flex-end; gap: 28px;
+      padding: 10px 48px; border-bottom: 1px solid var(--border); font-size: 14px;
+    }
+    .utility-bar a {
+      font-family: var(--font-head); font-weight: 700; color: var(--accent); text-decoration: none;
+    }
+    .utility-bar a:hover { color: var(--accent-dark); }
+
+    /* ------------------------------------------------------------- floating fabs */
+    .fab-stack {
+      position: fixed; right: 28px; bottom: 28px; z-index: 60;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .fab {
+      width: 52px; height: 52px; border-radius: 50%; padding: 0;
+      background: var(--card); border: 1px solid var(--border);
+      box-shadow: 0 10px 28px -14px rgba(57, 50, 50, .4);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: border-color .15s, transform .1s;
+    }
+    .fab:hover { border-color: var(--accent); }
+    .fab:active { transform: scale(.94); }
+    .fab svg { width: 22px; height: 22px; }
+
+    .fab-panel {
+      position: fixed; right: 28px; bottom: 96px; z-index: 59;
+      width: min(320px, calc(100vw - 56px));
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md);
+      box-shadow: 0 18px 44px -20px rgba(57, 50, 50, .45); padding: 18px;
+    }
+    .fab-panel h4 { font-family: var(--font-head); font-size: 16px; margin: 0 0 12px; }
+    .room-list { display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow: auto; }
+    .room-item {
+      display: flex; align-items: center; padding: 10px 14px; border: 1px solid var(--border);
+      border-radius: var(--r-md); cursor: pointer; background: var(--bg);
+      font-family: var(--font-head); font-weight: 600; font-size: 14px; transition: border-color .15s, color .15s;
+    }
+    .room-item:hover { border-color: var(--accent); }
+    .room-item.active { border-color: var(--accent); color: var(--accent); }
+    .room-empty { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 980px) {
+      .site-header, .hero, .result-section, .page-section, .utility-bar { padding-left: 24px; padding-right: 24px; }
+      .hero { grid-template-columns: 1fr; gap: 40px; padding-top: 12px; }
+      .info-cards { flex-direction: column; }
+      .info-card { min-height: 320px; }
+      .history-cols { grid-template-columns: 1fr; gap: 28px; }
+      .site-nav { gap: 20px; }
+      .result-grid { grid-template-columns: 1fr; }
+      .original-card { position: static; }
+      .checklist-grid { grid-template-columns: 1fr; }
+      .fab-stack { right: 16px; bottom: 16px; }
+      .fab-panel { right: 16px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home">
+      <img src="assets/images/SafeLanding_logo.png" alt="SafeLanding" class="brand-logo" />
+    </a>
+    <nav class="site-nav">
+      <a href="#home" class="active">Home</a>
+      <a href="#history">History</a>
+      <a href="#about">About</a>
+      <a href="#settings">Language</a>
+      <a href="/report">I want to report</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============================================================= HERO -->
+    <section class="hero" id="home">
+      <div class="hero-left">
+        <h1>Hey!<br />Give me information,<br />I can estimate the risk of <span class="accent">housing scams!</span></h1>
+
+        <div class="input-pill">
+          <textarea id="msg" rows="1" placeholder="Text, URL..."></textarea>
+          <button id="analyzeBtn" class="send-btn" type="button" aria-label="Analyze">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="upload-row">
+          <label class="upload-btn">
+            <input type="file" id="img" accept="image/*" multiple />
+            <span class="plus">+</span> Upload Image
+          </label>
+        </div>
+        <div id="preview" class="preview"></div>
+        <p class="upload-caption">Email, chat snapshot, document...</p>
+
+        <p id="error" class="error-banner hidden"></p>
+      </div>
+
+      <div class="hero-right">
+        <div class="info-cards">
+          <div class="info-card" id="whyCard">
+            <img src="assets/images/why-our-website.png" alt="" loading="lazy" />
+            <div class="content">
+              <h3>Why Our<br />Website?</h3>
+              <p>Housing scams are tricky, and hard to differentiate.</p>
+              <p class="more">SafeLanding fuses a live rule/LLM scam detector with a community
+                threat-intelligence database. Your message is checked against real URL
+                heuristics, scam-wording rules, and reports other renters have already filed -
+                so you find out both whether a message <em>looks</em> like a scam, and whether
+                this exact landlord, phone number, or address has been reported before.</p>
+              <button class="learn-more" type="button">Learn more →</button>
+            </div>
+          </div>
+          <div class="info-card" id="caseCard">
+            <img src="assets/images/case-study.png" alt="" loading="lazy" />
+            <div class="content">
+              <h3>Case<br />Study</h3>
+              <p>A scam that happened in 2025 via a Facebook group chat.</p>
+              <p class="more">A "landlord" claimed to be abroad and unable to show the flat,
+                said many other students were interested, and asked for a deposit by bank
+                transfer to "secure" the room before any viewing or contract. The address and
+                photos were real, but the listing and the person were not - a classic
+                fake-landlord / prepaid-deposit pattern now in the SafeLanding database.</p>
+              <button class="learn-more" type="button">Learn more →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================== RESULT -->
+    <section id="result" class="result-section hidden">
+      <h2 class="result-title">From this input, we estimated this as <span id="verdictWord" class="verdict-word"></span>.</h2>
+      <p id="inputsTag" class="inputs-tag"></p>
+
+      <!-- Step 1: summary verdict + quick checklist of detected risks -->
+      <div id="resultSummary">
+        <div class="gradient-card">
+          <div class="summary-header">
+            <span id="riskCount" class="risk-count"></span>
+            <div class="meter"><span id="meterBar"></span></div>
+            <span id="score" class="score"></span>
+          </div>
+          <p id="summary" class="summary-text"></p>
+          <ul id="summaryChecklist" class="summary-checklist"></ul>
+          <button id="detailBtn" class="link-btn" type="button">Detailed Analyzation →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: two-column detailed analysis, revealed via "Detailed Analyzation →" -->
+      <div id="resultDetail" class="hidden">
+        <div class="result-grid">
+          <div class="original-card">
+            <h4>Original Message</h4>
+            <div id="originalText" class="original-text"></div>
+          </div>
+
+          <div class="result-right">
+            <div class="analyzing-block">
+              <h3>Analyzing Result</h3>
+              <div id="dbWarning" class="db-warning hidden"></div>
+              <div id="tactics" class="risk-cards"></div>
+            </div>
+
+            <div id="moreInfo" class="more-info hidden">
+              <h4>More Info</h4>
+              <div id="moreInfoList"></div>
+            </div>
+
+            <div class="report-row">
+              <button id="reportBtn" type="button">Report this to the community database</button>
+              <span id="reportMsg" class="report-ok hidden"></span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="checklist-row-title">Check List</h3>
+        <div class="result-grid checklist-row">
+          <div class="original-card">
+            <div class="checklist-grid">
+              <div>
+                <h4>Host Verification</h4>
+                <label><input type="checkbox" data-key="passport" /> Passport</label>
+                <label><input type="checkbox" data-key="kamernet" /> Kamernet Verification</label>
+              </div>
+              <div>
+                <h4>Payment</h4>
+                <label><input type="checkbox" data-key="home_tour" /> Home Tour</label>
+                <label><input type="checkbox" data-key="office_meet" /> Office Meet</label>
+                <label><input type="checkbox" data-key="contract" /> Contract Verification</label>
+              </div>
+            </div>
+          </div>
+          <div class="result-right">
+            <div id="checklistRisks" class="risk-cards"></div>
+          </div>
+        </div>
+
+        <button id="backToSummaryBtn" class="link-btn" type="button">← Back to summary</button>
+      </div>
+    </section>
+
+    <!-- =================================================== ALREADY PAID -->
+    <section id="alreadyPaid" class="result-section hidden">
+      <h2 class="result-title">We are sorry to hear this.<br />Luckily, you still have a chance to get money back!</h2>
+      <div class="gradient-card">
+        <ol class="howto-list">
+          <li><span class="num">1</span><p>Try to contact the host. It will be great if it is just a mistake.</p></li>
+          <li><span class="num">2</span><p>Local renting-support organizations (such as the Dutch !WOON helpdesks) can help renters who paid a deposit for a room that turned out to be fake.</p></li>
+          <li><span class="num">3</span><p>For legal issues, free legal-aid organizations such as Het Juridisch Loket can advise on next steps.</p></li>
+        </ol>
+      </div>
+      <button id="alreadyPaidBack" class="link-btn" type="button">← Back to results</button>
+    </section>
+
+    <!-- ======================================================== COMPOSE -->
+    <section id="composeSection" class="result-section hidden">
+      <h2 class="result-title">Add a New <span class="accent">Message</span></h2>
+      <div class="result-grid">
+        <div class="original-card">
+          <h4>Current Message</h4>
+          <div id="composeOriginal" class="original-text"></div>
+        </div>
+        <div class="result-right">
+          <div class="original-card">
+            <h4>New Text</h4>
+            <textarea id="composeMsg" class="compose-textarea" placeholder="Paste a new message, link..."></textarea>
+            <div class="upload-row">
+              <label class="upload-btn">
+                <input type="file" id="composeImg" accept="image/*" multiple />
+                <span class="plus">+</span> Upload Image
+              </label>
+            </div>
+            <div id="composePreview" class="preview"></div>
+            <div class="report-row">
+              <button id="composeSend" type="button">Analyze this message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button id="composeBack" class="link-btn" type="button">← Back</button>
+    </section>
+
+    <!-- ========================================================== HISTORY -->
+    <section id="history" class="page-section">
+      <h2>Community <span class="accent">History</span></h2>
+      <p class="lede">A live look at the threat-intelligence database behind SafeLanding:
+        documented reference cases and recent community reports of specific scammers.</p>
+      <div class="history-cols">
+        <div>
+          <h3>Documented cases</h3>
+          <div id="historyCases" class="card-list">
+            <p class="muted-note">Loading...</p>
+          </div>
+        </div>
+        <div>
+          <h3>Recent community reports</h3>
+          <div id="historyReports" class="card-list">
+            <p class="muted-note">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ ABOUT -->
+    <section id="about" class="page-section">
+      <h2>About <span class="accent">SafeLanding</span></h2>
+      <p class="lede">SafeLanding is a rental-scam detector for non-native speakers in the
+        Netherlands. The live analyzer answers "does this message look like a scam?". The
+        community database answers "have we seen this specific scammer or pattern before?".
+        Fusing the two gives one verdict that is both pattern-aware and memory-aware.</p>
+
+      <h3 id="howto">How to Use?</h3>
+      <ol class="howto-list">
+        <li><span class="num">1</span><p>Paste the suspicious message, a listing link, or
+          upload a screenshot of the chat / email / document.</p></li>
+        <li><span class="num">2</span><p>Press the orange arrow. We estimate the risk and show
+          you exactly which warning signs were found, in your own language.</p></li>
+        <li><span class="num">3</span><p>Open "More Info" on any risk card to see matching scam
+          patterns, similar documented cases, and recommended next steps - then report it to
+          help the next person.</p></li>
+      </ol>
+
+      <h3 id="already-paid">Already Paid?</h3>
+      <p class="lede" style="margin-bottom: 16px;">We are sorry to hear this. You still have a
+        chance to get money back.</p>
+      <ol class="howto-list muted">
+        <li><span class="num">1</span><p>Try to contact the host. It will be great if it is
+          just a mistake.</p></li>
+        <li><span class="num">2</span><p>Local renting-support organizations (such as the Dutch
+          !WOON helpdesks) can help renters who paid a deposit for a room that turned out to be
+          fake.</p></li>
+        <li><span class="num">3</span><p>For legal issues, free legal-aid organizations such as
+          Het Juridisch Loket can advise on next steps.</p></li>
+      </ol>
+      <p class="lede">Either way - <a href="#home" style="color: var(--accent); font-weight: 700; text-decoration: none;">paste what happened above</a>
+        and use "Report this to the community database" so others are warned.</p>
+    </section>
+
+    <!-- ========================================================== SETTINGS -->
+    <section id="settings" class="page-section">
+      <h2>Settin<span class="accent">g</span></h2>
+      <div class="settings-grid">
+        <div>
+          <label for="lang">Explain results to me in</label>
+          <select id="lang">
+            <option value="English">English</option>
+            <option value="Chinese">中文 (Chinese)</option>
+            <option value="Dutch">Nederlands (Dutch)</option>
+          </select>
+          <p class="field-hint">Tactic names, explanations, and tips switch language immediately on your next analysis.</p>
+        </div>
+        <div>
+          <label>Database &amp; review console</label>
+          <a class="admin-link" href="/admin">Open admin console →</a>
+          <p class="field-hint">Review community reports, matched patterns, and reference cases.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="fab-stack">
+    <button id="roomsFab" class="fab" type="button" aria-label="Room history"></button>
+    <button id="composeFab" class="fab" type="button" aria-label="New message"></button>
+  </div>
+
+  <div id="roomsPanel" class="fab-panel hidden">
+    <h4>Rooms</h4>
+    <div id="roomList" class="room-list"></div>
+  </div>
+
+  <script>
+    const msgEl = document.getElementById("msg");
+    const imgEl = document.getElementById("img");
+    const previewEl = document.getElementById("preview");
+    const langEl = document.getElementById("lang");
+    const btn = document.getElementById("analyzeBtn");
+    const resultEl = document.getElementById("result");
+    const resultSummaryEl = document.getElementById("resultSummary");
+    const resultDetailEl = document.getElementById("resultDetail");
+    const heroEl = document.querySelector(".hero");
+    const alreadyPaidEl = document.getElementById("alreadyPaid");
+    const composeSectionEl = document.getElementById("composeSection");
+    const errorEl = document.getElementById("error");
+
+    // Auto-grow the textarea as the user types (chat-input feel).
+    msgEl.addEventListener("input", function () {
+      msgEl.style.height = "auto";
+      msgEl.style.height = Math.min(msgEl.scrollHeight, 160) + "px";
+    });
+    // Enter submits, Shift+Enter inserts a newline.
+    msgEl.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        analyze();
+      }
+    });
+
+    // An ARRAY of base64 strings (one per selected image), shared by the hero
+    // uploader and the compose popup.
+    let imagesBase64 = [];
+    let currentInputText = "";
+
+    function readFileAsDataURL(file) {
+      return new Promise(function (resolve) {
+        const reader = new FileReader();
+        reader.onload = function () { resolve(reader.result); };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Read ALL selected files, fill imagesBase64, and show thumbnails in previewBox.
+    function handleImageSelection(files, previewBox) {
+      imagesBase64 = [];
+      previewBox.innerHTML = "";
+      if (!files.length) return;
+      Promise.all(files.map(readFileAsDataURL)).then(function (dataUrls) {
+        dataUrls.forEach(function (durl) {
+          imagesBase64.push(durl.split(",")[1] || "");
+          const im = document.createElement("img");
+          im.src = durl;
+          previewBox.appendChild(im);
+        });
+      });
+    }
+    imgEl.addEventListener("change", function () {
+      handleImageSelection(Array.from(imgEl.files), previewEl);
+    });
+
+    btn.addEventListener("click", analyze);
+
+    async function analyze() {
+      const text = msgEl.value.trim();
+      if (!text && imagesBase64.length === 0) {
+        showError("Please paste some text, a link, or upload at least one image."); return;
+      }
+      btn.disabled = true; hide(errorEl);
+
+      try {
+        const response = await fetch("/api/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: text,
+            url: "",
+            images_base64: imagesBase64,
+            native_language: langEl.value,
+          }),
+        });
+        if (!response.ok) throw new Error("backend returned status " + response.status);
+        const data = await response.json();
+        saveRoomFromResult({ text: text, url: "", images_base64: imagesBase64 }, data);
+        renderRoomList();
+        render(data, text);
+      } catch (err) {
+        showError("Request failed: " + err.message + " (is the backend running?)");
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    const VERDICT_LABEL = { safe: "Low Risk", suspicious: "Medium Risk", dangerous: "High Risk" };
+
+    // ---------------------------------------------------------------- icons
+    const ICON_GRID = '<svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">' +
+      '<rect x="0" y="0" width="9" height="22" rx="2" fill="#EB8E37"/>' +
+      '<rect x="13" y="0" width="9" height="9" rx="2" fill="#EB8E37"/>' +
+      '<rect x="13" y="13" width="4" height="9" rx="2" fill="#EB8E37"/>' +
+      '<rect x="18" y="13" width="4" height="9" rx="2" fill="#EB8E37"/></svg>';
+    const ICON_CHAT = '<svg width="22" height="22" viewBox="0 0 24 24" fill="#EB8E37" aria-hidden="true">' +
+      '<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2h11A2.5 2.5 0 0 1 20 4.5v8a2.5 2.5 0 0 1-2.5 2.5H12l-4.5 4.5V15H6.5A2.5 2.5 0 0 1 4 12.5v-8Z"/></svg>';
+    document.getElementById("roomsFab").innerHTML = ICON_GRID;
+    document.getElementById("composeFab").innerHTML = ICON_CHAT;
+
+    // ------------------------------------------------------------ checklist
+    const CHECKLIST_ITEMS = [
+      { key: "passport", label: "Passport", group: "Host Verification",
+        risk: "Unverified Identity",
+        explanation: "You haven't confirmed the host's passport/ID - anyone could be impersonating the landlord." },
+      { key: "kamernet", label: "Kamernet Verification", group: "Host Verification",
+        risk: "Unverified Listing",
+        explanation: "This listing hasn't been checked against Kamernet - it could be a duplicate or fake post." },
+      { key: "home_tour", label: "Home Tour", group: "Payment",
+        risk: "Tour Needed",
+        explanation: "Skip home tour might risk fake host." },
+      { key: "office_meet", label: "Office Meet", group: "Payment",
+        risk: "No Office Meeting",
+        explanation: "You haven't met the agent/landlord in person - harder to verify their identity." },
+      { key: "contract", label: "Contract Verification", group: "Payment",
+        risk: "Unverified Contract",
+        explanation: "The rental contract hasn't been checked yet - verify the terms before paying anything." },
+    ];
+
+    function emptyChecklist() {
+      const c = {};
+      CHECKLIST_ITEMS.forEach(function (item) { c[item.key] = false; });
+      return c;
+    }
+
+    // ---------------------------------------------------------------- rooms
+    const ROOMS_KEY = "safelanding_rooms";
+    let activeRoomId = null;
+
+    function loadRooms() {
+      try {
+        const data = JSON.parse(localStorage.getItem(ROOMS_KEY));
+        return Array.isArray(data) ? data : [];
+      } catch (err) { return []; }
+    }
+    function persistRooms(rooms) {
+      localStorage.setItem(ROOMS_KEY, JSON.stringify(rooms));
+    }
+    function nextRoomName(rooms) {
+      let i = 0;
+      while (rooms.some(function (r) { return r.name === "Room " + String.fromCharCode(65 + i); })) i++;
+      return "Room " + String.fromCharCode(65 + i);
+    }
+    function saveRoomFromResult(input, result) {
+      const rooms = loadRooms();
+      const room = {
+        id: "room_" + Date.now(),
+        name: nextRoomName(rooms),
+        createdAt: new Date().toISOString(),
+        input: input,
+        result: result,
+        checklist: emptyChecklist(),
+      };
+      rooms.push(room);
+      persistRooms(rooms);
+      activeRoomId = room.id;
+      return room;
+    }
+    function getActiveRoom() {
+      return loadRooms().find(function (r) { return r.id === activeRoomId; }) || null;
+    }
+    function updateActiveRoomChecklist(checklist) {
+      const rooms = loadRooms();
+      const idx = rooms.findIndex(function (r) { return r.id === activeRoomId; });
+      if (idx === -1) return;
+      rooms[idx].checklist = checklist;
+      persistRooms(rooms);
+    }
+
+    function renderRoomList() {
+      const rooms = loadRooms();
+      const box = document.getElementById("roomList");
+      box.innerHTML = "";
+      if (!rooms.length) {
+        box.innerHTML = '<p class="room-empty">No rooms yet. Analyze a message to create one.</p>';
+        return;
+      }
+      rooms.slice().reverse().forEach(function (room) {
+        const div = document.createElement("div");
+        div.className = "room-item" + (room.id === activeRoomId ? " active" : "");
+        div.textContent = room.name;
+        div.addEventListener("click", function () { loadRoom(room.id); });
+        box.appendChild(div);
+      });
+    }
+    function loadRoom(id) {
+      const room = loadRooms().find(function (r) { return r.id === id; });
+      if (!room) return;
+      activeRoomId = room.id;
+      msgEl.value = (room.input && room.input.text) || "";
+      render(room.result, (room.input && room.input.text) || "");
+      renderRoomList();
+      hide(document.getElementById("roomsPanel"));
+    }
+
+    // ----------------------------------------------------- text highlighting
+    function escapeRegExp(s) {
+      return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+    function highlightOriginal(text, tactics) {
+      if (!text) return '<span class="room-empty">No text provided - image-only analysis.</span>';
+      let html = escapeHtml(text);
+      (tactics || []).forEach(function (t) {
+        // Backend snippets may be wrapped in "..." to show they were truncated
+        // from a longer message - strip those before matching against the text.
+        const snippet = (t.snippet || "").trim().replace(/^\.{3}/, "").replace(/\.{3}$/, "").trim();
+        if (!snippet) return;
+        const re = new RegExp(escapeRegExp(escapeHtml(snippet)), "ig");
+        html = html.replace(re, function (m) { return "<mark>" + m + "</mark>"; });
+      });
+      return html;
+    }
+
+    // ------------------------------------------------------------- checklist UI
+    document.querySelector(".checklist-grid").addEventListener("change", function (e) {
+      const cb = e.target;
+      if (!cb.matches('input[type="checkbox"]')) return;
+      const room = getActiveRoom();
+      const checklist = (room && room.checklist) || emptyChecklist();
+      checklist[cb.dataset.key] = cb.checked;
+      if (room) updateActiveRoomChecklist(checklist);
+      renderChecklistRisks(checklist);
+    });
+    function renderChecklist(checklist) {
+      checklist = checklist || emptyChecklist();
+      document.querySelectorAll('.checklist-grid input[type="checkbox"]').forEach(function (cb) {
+        cb.checked = !!checklist[cb.dataset.key];
+      });
+      renderChecklistRisks(checklist);
+    }
+    function renderChecklistRisks(checklist) {
+      checklist = checklist || emptyChecklist();
+      const box = document.getElementById("checklistRisks");
+      box.innerHTML = "";
+      CHECKLIST_ITEMS.forEach(function (item) {
+        if (checklist[item.key]) return;
+        const div = document.createElement("div");
+        div.className = "risk-card";
+        div.innerHTML = "<h4>Risk: " + escapeHtml(item.risk) + "</h4>" +
+          '<p class="risk-explanation">' + escapeHtml(item.explanation) + "</p>";
+        box.appendChild(div);
+      });
+    }
+
+    // -------------------------------------------------------------- more info
+    function isMoneyRelated(t) {
+      return /pay|deposit|transfer|fee|iban|borg|aanbetaling/i.test((t.name || "") + " " + (t.explanation || ""));
+    }
+    function fillMoreInfo(data) {
+      const list = document.getElementById("moreInfoList");
+      list.innerHTML = "";
+
+      // Build one group per category: a single heading, then bullets.
+      const groups = [];
+
+      const patterns = (data.matching_patterns || []).map(function (p) {
+        return escapeHtml(p.name) + (p.description ? " - " + escapeHtml(p.description) : "");
+      });
+      if (patterns.length) groups.push({ title: "Matches known scam patterns", items: patterns });
+
+      const cases = (data.similar_cases || []).map(function (c) {
+        const title = escapeHtml(c.title) + (c.city ? " (" + escapeHtml(c.city) + ")" : "");
+        return c.source_url
+          ? '<a href="' + encodeURI(c.source_url) + '" target="_blank" rel="noopener">' + title + "</a>"
+          : title;
+      });
+      if (cases.length) groups.push({ title: "Similar documented cases", items: cases });
+
+      const actions = (data.recommended_actions || []).map(escapeHtml);
+      if (actions.length) groups.push({ title: "Recommended actions", items: actions });
+
+      const tips = (data.how_to_spot || []).map(escapeHtml);
+      if (tips.length) groups.push({ title: "How to spot it", items: tips });
+
+      if (!groups.length) {
+        list.innerHTML = '<p class="more-info-empty">No additional details available for this result.</p>';
+        return;
+      }
+
+      groups.forEach(function (g) {
+        const section = document.createElement("div");
+        section.className = "more-info-group";
+        const h = document.createElement("h5");
+        h.textContent = g.title;
+        const ul = document.createElement("ul");
+        g.items.forEach(function (html) {
+          const li = document.createElement("li");
+          li.innerHTML = html;
+          ul.appendChild(li);
+        });
+        section.appendChild(h);
+        section.appendChild(ul);
+        list.appendChild(section);
+      });
+    }
+    document.getElementById("tactics").addEventListener("click", function (e) {
+      if (e.target.classList.contains("more-info-btn")) {
+        const moreInfo = document.getElementById("moreInfo");
+        show(moreInfo);
+        moreInfo.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (e.target.classList.contains("already-paid-btn")) {
+        showAlreadyPaid();
+      }
+    });
+
+    // ----------------------------------------------------------------- render
+    function render(data, inputText) {
+      lastResult = data;
+      // Prefer the backend's cleaned text (original_message): for image uploads
+      // it holds the readable OCR text, and the tactic snippets are extracted
+      // from it, so highlighting only matches when we display the same text.
+      // Fall back to whatever the user typed when the backend sends nothing.
+      if (data && typeof data.original_message === "string" && data.original_message.trim()) {
+        currentInputText = data.original_message;
+      } else if (typeof inputText === "string") {
+        currentInputText = inputText;
+      }
+
+      const verdictWord = document.getElementById("verdictWord");
+      verdictWord.textContent = VERDICT_LABEL[data.verdict] || data.verdict;
+      verdictWord.className = "verdict-word " + data.verdict;
+
+      document.getElementById("meterBar").style.width = data.risk_score + "%";
+      document.getElementById("score").textContent = data.risk_score + " / 100";
+
+      const tagEl = document.getElementById("inputsTag");
+      tagEl.textContent = data.inputs_analyzed && data.inputs_analyzed.length
+        ? "Analyzed: " + data.inputs_analyzed.join(" + ") : "";
+
+      document.getElementById("summary").textContent = data.summary;
+
+      const tactics = data.tactics || [];
+      const riskCount = document.getElementById("riskCount");
+      riskCount.textContent = tactics.length
+        ? tactics.length + (tactics.length === 1 ? " Risk is detected." : " Risks are detected.")
+        : "No risks detected.";
+
+      // ---- Step 1 summary checklist: detected risk names with a checkmark ----
+      const summaryChecklist = document.getElementById("summaryChecklist");
+      summaryChecklist.innerHTML = "";
+      if (tactics.length) {
+        tactics.forEach(function (t) {
+          const li = document.createElement("li");
+          li.innerHTML = '<span class="check-mark">✓</span> ' + escapeHtml(t.name);
+          summaryChecklist.appendChild(li);
+        });
+      } else {
+        summaryChecklist.innerHTML = '<li class="room-empty">No specific risks detected.</li>';
+      }
+
+      document.getElementById("originalText").innerHTML = highlightOriginal(currentInputText, tactics);
+
+      // ---- Risk cards ----
+      const box = document.getElementById("tactics");
+      box.innerHTML = "";
+      tactics.forEach(function (t) {
+        const src = t.source === "database" ? "database" : "live";
+        const srcLabel = src === "database" ? "from database" : "live check";
+        const div = document.createElement("div");
+        div.className = "risk-card";
+        let actions = '<button type="button" class="more-info-btn">More Info →</button>';
+        if (isMoneyRelated(t)) {
+          actions += '<button type="button" class="already-paid-btn">Already Paid? →</button>';
+        }
+        div.innerHTML =
+          '<h4>Risk: ' + escapeHtml(t.name) + '<span class="src-badge">' + srcLabel + '</span></h4>' +
+          (t.snippet ? '<div class="risk-snippet">' + escapeHtml(t.snippet) + "</div>" : "") +
+          '<p class="risk-explanation">' + escapeHtml(t.explanation) + "</p>" +
+          '<div class="risk-actions">' + actions + "</div>";
+        box.appendChild(div);
+      });
+
+      // ---- Direct database-match banner ----
+      const ri = data.reported_intelligence || {};
+      const dbWarning = document.getElementById("dbWarning");
+      if (ri.direct_warning) {
+        dbWarning.textContent = "⚠ " + ri.direct_warning;
+        show(dbWarning);
+      } else { hide(dbWarning); }
+
+      // ---- Checklist for the active room ----
+      renderChecklist(getActiveRoom() ? getActiveRoom().checklist : emptyChecklist());
+
+      // ---- More info (filled now, opened on demand) ----
+      fillMoreInfo(data);
+      hide(document.getElementById("moreInfo"));
+
+      hide(document.getElementById("reportMsg"));
+
+      // ---- Reset to the step-1 summary view ----
+      hide(resultDetailEl);
+      show(resultSummaryEl);
+
+      showHome();
+    }
+
+    // ------------------------------------------------------------- view switching
+    function restoreHome() {
+      show(heroEl);
+      if (lastResult) show(resultEl); else hide(resultEl);
+      hide(alreadyPaidEl);
+      hide(composeSectionEl);
+    }
+    function showHome() {
+      restoreHome();
+      if (lastResult) {
+        resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        heroEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+    function showAlreadyPaid() {
+      hide(heroEl);
+      hide(resultEl);
+      hide(composeSectionEl);
+      show(alreadyPaidEl);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function showCompose() {
+      hide(heroEl);
+      hide(resultEl);
+      hide(alreadyPaidEl);
+      document.getElementById("composeOriginal").innerHTML = currentInputText
+        ? highlightOriginal(currentInputText, (lastResult && lastResult.tactics) || [])
+        : '<span class="room-empty">No previous message yet.</span>';
+      show(composeSectionEl);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.getElementById("detailBtn").addEventListener("click", function () {
+      hide(resultSummaryEl);
+      show(resultDetailEl);
+      resultDetailEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    document.getElementById("backToSummaryBtn").addEventListener("click", function () {
+      hide(resultDetailEl);
+      show(resultSummaryEl);
+      resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    document.getElementById("alreadyPaidBack").addEventListener("click", showHome);
+    document.getElementById("composeBack").addEventListener("click", showHome);
+
+    // ------------------------------------------------------------- fab panels
+    const roomsFab = document.getElementById("roomsFab");
+    const composeFab = document.getElementById("composeFab");
+    const roomsPanel = document.getElementById("roomsPanel");
+
+    roomsFab.addEventListener("click", function () {
+      roomsPanel.classList.toggle("hidden");
+      if (!roomsPanel.classList.contains("hidden")) renderRoomList();
+    });
+    composeFab.addEventListener("click", function () {
+      hide(roomsPanel);
+      showCompose();
+    });
+
+    const composeMsg = document.getElementById("composeMsg");
+    const composeImg = document.getElementById("composeImg");
+    const composePreview = document.getElementById("composePreview");
+    composeImg.addEventListener("change", function () {
+      handleImageSelection(Array.from(composeImg.files), composePreview);
+    });
+    document.getElementById("composeSend").addEventListener("click", async function () {
+      const text = composeMsg.value.trim();
+      if (!text && imagesBase64.length === 0) return;
+      msgEl.value = text;
+      await analyze();
+      composeMsg.value = "";
+      composePreview.innerHTML = "";
+    });
+
+    renderRoomList();
+
+    // ---- Expandable "Why Our Website?" / "Case Study" info cards ----
+    document.querySelectorAll(".info-card .learn-more").forEach(function (b) {
+      b.addEventListener("click", function () {
+        const card = b.closest(".info-card");
+        const expanded = card.classList.toggle("expanded");
+        b.textContent = expanded ? "Show less ←" : "Learn more →";
+      });
+    });
+
+    // Track the most recent analysis so the user can file it as a report.
+    let lastResult = null;
+
+    document.getElementById("reportBtn").addEventListener("click", async function () {
+      const text = msgEl.value.trim();
+      if (!text) {
+        showError("Type the message or link first, then report it."); return;
+      }
+      const flags = (lastResult && lastResult.tactics) ? lastResult.tactics.map(function (t) { return t.name; }) : [];
+      const payload = {
+        Title: "Community report from analyzer",
+        Description: text.slice(0, 500),
+        Uploaded_Text: text,
+        Listing_URL: "",
+        Red_Flags_Observed: flags,
+        Reporter_Notes: lastResult ? ("Analyzer verdict: " + lastResult.verdict + " (" + lastResult.risk_score + "/100)") : ""
+      };
+      const rb = this; rb.disabled = true; rb.textContent = "Reporting...";
+      try {
+        const r = await fetch("/api/reports", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!r.ok) throw new Error("status " + r.status);
+        const saved = await r.json();
+        const rm = document.getElementById("reportMsg");
+        rm.textContent = "Saved as " + saved.Report_ID + " (pending admin review). Thank you.";
+        show(rm);
+      } catch (err) {
+        showError("Report failed: " + err.message);
+      } finally {
+        rb.disabled = false; rb.textContent = "Report this to the community database";
+      }
+    });
+
+    // ---- "History" tab: read-only view of the threat-intelligence database ----
+    (async function loadHistory() {
+      const casesBox = document.getElementById("historyCases");
+      const reportsBox = document.getElementById("historyReports");
+      try {
+        const [casesRes, reportsRes] = await Promise.all([
+          fetch("/api/cases"), fetch("/api/reports"),
+        ]);
+        const cases = await casesRes.json();
+        const reports = await reportsRes.json();
+
+        casesBox.innerHTML = "";
+        cases.slice(0, 6).forEach(function (c) {
+          const div = document.createElement("div");
+          div.className = "list-card";
+          div.innerHTML = "<h4>" + escapeHtml(c.Title || "Untitled case") + "</h4>" +
+            "<p>" + escapeHtml(c.Description || c.Scam_Category || "") + "</p>" +
+            '<div class="meta">' + [c.City, c.Country, c.Scam_Category].filter(Boolean).map(escapeHtml).join(" · ") + "</div>";
+          casesBox.appendChild(div);
+        });
+        if (!cases.length) casesBox.innerHTML = '<p class="muted-note">No reference cases yet.</p>';
+
+        reportsBox.innerHTML = "";
+        reports.slice().reverse().slice(0, 6).forEach(function (r) {
+          const div = document.createElement("div");
+          div.className = "list-card";
+          div.innerHTML = "<h4>" + escapeHtml(r.Title || "Untitled report") + "</h4>" +
+            "<p>" + escapeHtml(r.Description || "") + "</p>" +
+            '<div class="meta"><span class="status">' + escapeHtml(r.Review_Status || "Pending") + "</span>" +
+            [r.Location, r.Scam_Category].filter(Boolean).map(escapeHtml).join(" · ") + "</div>";
+          reportsBox.appendChild(div);
+        });
+        if (!reports.length) reportsBox.innerHTML = '<p class="muted-note">No community reports yet - be the first to file one.</p>';
+      } catch (err) {
+        casesBox.innerHTML = '<p class="muted-note">Could not load the database.</p>';
+        reportsBox.innerHTML = '<p class="muted-note">Could not load the database.</p>';
+      }
+    })();
+
+    // ---- Nav links / brand always return to the home layout ----
+    document.querySelector(".brand").addEventListener("click", restoreHome);
+    document.querySelectorAll(".site-nav a").forEach(function (a) {
+      a.addEventListener("click", restoreHome);
+    });
+
+    // ---- Highlight the active nav link as the user scrolls ----
+    const navLinks = Array.from(document.querySelectorAll(".site-nav a"))
+      .filter(function (a) { return (a.getAttribute("href") || "").charAt(0) === "#"; });
+    const sections = navLinks.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+    window.addEventListener("scroll", function () {
+      let current = sections[0];
+      sections.forEach(function (sec) {
+        if (sec && window.scrollY >= sec.offsetTop - 120) current = sec;
+      });
+      navLinks.forEach(function (a) {
+        a.classList.toggle("active", document.querySelector(a.getAttribute("href")) === current);
+      });
+    }, { passive: true });
+
+    function showError(msg) { errorEl.textContent = msg; show(errorEl); }
+    function show(el) { el.classList.remove("hidden"); }
+    function hide(el) { el.classList.add("hidden"); }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+  </script>
+</body>
+</html>

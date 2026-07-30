@@ -1,0 +1,444 @@
+[
+  {
+    "Case_ID": "HS001",
+    "Title": "Amsterdam fake landlord asks for deposit before viewing",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Amsterdam",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake landlord",
+    "Threat_Actor": "Fake landlord",
+    "Communication_Channel": "Facebook group and WhatsApp",
+    "Attack_Steps": [
+      "Posts attractive room listing",
+      "Moves student to WhatsApp",
+      "Claims many applicants",
+      "Requests deposit before viewing"
+    ],
+    "Knowledge_Gaps": [
+      "KG001",
+      "KG004",
+      "KG006"
+    ],
+    "Social_Engineering_Techniques": [
+      "Scarcity",
+      "Urgency",
+      "Authority mimicry"
+    ],
+    "Requested_Action": "Pay deposit before viewing",
+    "Impact": "Student risks losing deposit and sharing identity documents",
+    "Red_Flags": [
+      "Payment before viewing",
+      "Pressure from many applicants",
+      "No verifiable landlord identity"
+    ],
+    "Summary": "A fake landlord used housing scarcity to push a student to pay a deposit before seeing the room."
+  },
+  {
+    "Case_ID": "HS002",
+    "Title": "Delft exchange sublet with no registration possible",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Delft",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake student sublet",
+    "Threat_Actor": "Fake subletter",
+    "Communication_Channel": "Telegram",
+    "Attack_Steps": [
+      "Claims to leave for exchange",
+      "Shares old room photos",
+      "Says registration is impossible",
+      "Requests deposit to hold the room"
+    ],
+    "Knowledge_Gaps": [
+      "KG001",
+      "KG003",
+      "KG004"
+    ],
+    "Social_Engineering_Techniques": [
+      "Similarity",
+      "Time pressure",
+      "Removing objections"
+    ],
+    "Requested_Action": "Pay holding deposit",
+    "Impact": "Loss of deposit and arrival without accommodation",
+    "Red_Flags": [
+      "No sublet permission",
+      "No registration possible",
+      "Only old photos"
+    ],
+    "Summary": "A fake student sublet offer avoided formal checks by saying the room was temporary and registration was not possible."
+  },
+  {
+    "Case_ID": "HS003",
+    "Title": "Eindhoven fake roommate invitation in student chat",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Eindhoven",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake roommate invitation",
+    "Threat_Actor": "Fake student roommate",
+    "Communication_Channel": "WhatsApp",
+    "Attack_Steps": [
+      "Joins student housing chat",
+      "Claims house needs a final roommate",
+      "Shares friendly group story",
+      "Requests reservation fee"
+    ],
+    "Knowledge_Gaps": [
+      "KG002",
+      "KG003",
+      "KG006"
+    ],
+    "Social_Engineering_Techniques": [
+      "Social proof",
+      "Liking",
+      "Scarcity"
+    ],
+    "Requested_Action": "Pay reservation fee",
+    "Impact": "Financial loss and disclosure of personal documents",
+    "Red_Flags": [
+      "Fee to join house",
+      "No university email verification",
+      "No live call with housemates"
+    ],
+    "Summary": "A fake roommate persona used student community trust to collect a reservation fee."
+  },
+  {
+    "Case_ID": "HS004",
+    "Title": "Utrecht cloned agency advertises guaranteed rooms",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Utrecht",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake rental agency",
+    "Threat_Actor": "Fake rental agency",
+    "Communication_Channel": "Cloned website and email",
+    "Attack_Steps": [
+      "Creates professional-looking agency site",
+      "Advertises guaranteed student rooms",
+      "Asks for viewing package fee",
+      "Stops responding after payment"
+    ],
+    "Knowledge_Gaps": [
+      "KG001",
+      "KG002",
+      "KG006"
+    ],
+    "Social_Engineering_Techniques": [
+      "Authority mimicry",
+      "Professional design",
+      "Scarcity"
+    ],
+    "Requested_Action": "Pay viewing package fee",
+    "Impact": "Loss of agency fee and false confidence in fake listings",
+    "Red_Flags": [
+      "Guaranteed room",
+      "Upfront viewing fee",
+      "Recently created website"
+    ],
+    "Summary": "A fake agency borrowed professional signals to sell access to rooms it did not control."
+  },
+  {
+    "Case_ID": "HS005",
+    "Title": "Rotterdam landlord abroad asks for passport and bank transfer",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Rotterdam",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake landlord",
+    "Threat_Actor": "Fake landlord",
+    "Communication_Channel": "Email",
+    "Attack_Steps": [
+      "Replies to student inquiry",
+      "Claims to be abroad",
+      "Sends copied contract",
+      "Requests passport and deposit transfer"
+    ],
+    "Knowledge_Gaps": [
+      "KG001",
+      "KG004",
+      "KG005"
+    ],
+    "Social_Engineering_Techniques": [
+      "Credibility building",
+      "Commitment",
+      "Removing objections"
+    ],
+    "Requested_Action": "Send passport copy and deposit",
+    "Impact": "Identity fraud risk and loss of money",
+    "Red_Flags": [
+      "Landlord abroad",
+      "Copied contract",
+      "Passport requested before verification"
+    ],
+    "Summary": "A fake landlord used a remote-owner story to avoid viewing and request identity documents."
+  },
+  {
+    "Case_ID": "HS006",
+    "Title": "Leiden housing group admin sends payment link",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Leiden",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake housing group administrator",
+    "Threat_Actor": "Fake housing group administrator",
+    "Communication_Channel": "Facebook direct message",
+    "Attack_Steps": [
+      "Impersonates group admin",
+      "Claims listing is admin verified",
+      "Sends external payment link",
+      "Requests fast payment"
+    ],
+    "Knowledge_Gaps": [
+      "KG002",
+      "KG006"
+    ],
+    "Social_Engineering_Techniques": [
+      "Authority",
+      "Urgency",
+      "Trust transfer"
+    ],
+    "Requested_Action": "Pay through external link",
+    "Impact": "Payment fraud and credential exposure",
+    "Red_Flags": [
+      "Private admin message",
+      "External payment link",
+      "No public verification"
+    ],
+    "Summary": "A fake admin redirected a student from a housing group to a fraudulent payment link."
+  },
+  {
+    "Case_ID": "HS007",
+    "Title": "Groningen room listing uses stolen photos",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Groningen",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake landlord",
+    "Threat_Actor": "Fake landlord",
+    "Communication_Channel": "Rental marketplace",
+    "Attack_Steps": [
+      "Copies photos from old listing",
+      "Offers below-market rent",
+      "Rejects live viewing",
+      "Requests first month rent"
+    ],
+    "Knowledge_Gaps": [
+      "KG001",
+      "KG004",
+      "KG006"
+    ],
+    "Social_Engineering_Techniques": [
+      "Too-good-to-be-true offer",
+      "Urgency",
+      "Removing objections"
+    ],
+    "Requested_Action": "Pay first month rent",
+    "Impact": "Loss of rent payment",
+    "Red_Flags": [
+      "Below-market price",
+      "Stolen photos",
+      "No live viewing"
+    ],
+    "Summary": "A fake listing combined low price with copied photos and pressure to pay quickly."
+  },
+  {
+    "Case_ID": "HS008",
+    "Title": "Maastricht agency asks for registration fee before showing address",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Maastricht",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake rental agency",
+    "Threat_Actor": "Fake rental agency",
+    "Communication_Channel": "Search ad and website",
+    "Attack_Steps": [
+      "Targets incoming students via search ad",
+      "Promotes room access after registration",
+      "Hides exact address",
+      "Requests registration fee"
+    ],
+    "Knowledge_Gaps": [
+      "KG001",
+      "KG002",
+      "KG006"
+    ],
+    "Social_Engineering_Techniques": [
+      "Authority mimicry",
+      "Information asymmetry",
+      "Scarcity"
+    ],
+    "Requested_Action": "Pay registration fee",
+    "Impact": "Loss of fee and wasted time",
+    "Red_Flags": [
+      "No exact address",
+      "Paywall before viewing",
+      "Sparse company details"
+    ],
+    "Summary": "A fake agency charged students to access vague listings without a verifiable address."
+  },
+  {
+    "Case_ID": "HS009",
+    "Title": "The Hague sublet asks for cash via friend",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "The Hague",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake student sublet",
+    "Threat_Actor": "Fake subletter",
+    "Communication_Channel": "Instagram DM",
+    "Attack_Steps": [
+      "Claims room is available for summer",
+      "Says payment must go to friend",
+      "Avoids contract",
+      "Asks for cash transfer"
+    ],
+    "Knowledge_Gaps": [
+      "KG001",
+      "KG003",
+      "KG005"
+    ],
+    "Social_Engineering_Techniques": [
+      "Informality",
+      "Trust building",
+      "Urgency"
+    ],
+    "Requested_Action": "Transfer cash equivalent to friend",
+    "Impact": "Unrecoverable payment loss",
+    "Red_Flags": [
+      "Payment to third party",
+      "No written contract",
+      "Informal cash-like transfer"
+    ],
+    "Summary": "A fake sublet request used informal student norms to bypass contract and payment checks."
+  },
+  {
+    "Case_ID": "HS010",
+    "Title": "Tilburg fake roommate asks for ID before sharing address",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Tilburg",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake roommate invitation",
+    "Threat_Actor": "Fake student roommate",
+    "Communication_Channel": "Discord",
+    "Attack_Steps": [
+      "Posts in admitted-students server",
+      "Claims privacy reason for hiding address",
+      "Requests passport scan",
+      "Later requests reservation fee"
+    ],
+    "Knowledge_Gaps": [
+      "KG002",
+      "KG005",
+      "KG006"
+    ],
+    "Social_Engineering_Techniques": [
+      "Community trust",
+      "Commitment",
+      "Privacy pretext"
+    ],
+    "Requested_Action": "Send passport scan and reservation fee",
+    "Impact": "Identity document exposure and financial loss",
+    "Red_Flags": [
+      "ID before address",
+      "No independent verification",
+      "Fee after document sharing"
+    ],
+    "Summary": "A fake roommate used an admitted-students community to request ID and money before basic verification."
+  },
+  {
+    "Case_ID": "HS011",
+    "Title": "Nijmegen landlord refuses video tour but demands quick transfer",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Nijmegen",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake landlord",
+    "Threat_Actor": "Fake landlord",
+    "Communication_Channel": "WhatsApp",
+    "Attack_Steps": [
+      "Offers furnished room",
+      "Refuses live video due to work",
+      "Says other student will pay today",
+      "Demands transfer to reserve"
+    ],
+    "Knowledge_Gaps": [
+      "KG001",
+      "KG004"
+    ],
+    "Social_Engineering_Techniques": [
+      "Scarcity",
+      "Urgency",
+      "Excuse making"
+    ],
+    "Requested_Action": "Transfer reservation deposit",
+    "Impact": "Loss of deposit",
+    "Red_Flags": [
+      "Refuses live video",
+      "Immediate deadline",
+      "Reservation deposit"
+    ],
+    "Summary": "A fake landlord avoided live verification and used a same-day deadline to push payment."
+  },
+  {
+    "Case_ID": "HS012",
+    "Title": "Enschede platform clone sends fake invoice",
+    "Source_Name": "Hackathon starter dataset",
+    "Source_URL": "",
+    "Country": "Netherlands",
+    "City": "Enschede",
+    "Target_Group": "International Students",
+    "Scam_Category": "Housing Scam",
+    "Subcategory": "Fake rental agency",
+    "Threat_Actor": "Fake rental agency",
+    "Communication_Channel": "Email and cloned invoice",
+    "Attack_Steps": [
+      "Copies a trusted platform name",
+      "Sends fake invoice",
+      "Claims room is reserved after payment",
+      "Uses personal payment account"
+    ],
+    "Knowledge_Gaps": [
+      "KG001",
+      "KG005",
+      "KG006"
+    ],
+    "Social_Engineering_Techniques": [
+      "Brand impersonation",
+      "Authority",
+      "Commitment"
+    ],
+    "Requested_Action": "Pay fake invoice",
+    "Impact": "Loss of invoice amount and possible credential theft",
+    "Red_Flags": [
+      "Cloned brand",
+      "Personal payment account",
+      "Invoice outside platform"
+    ],
+    "Summary": "A fake agency used a platform-like invoice to make an off-platform payment look official."
+  }
+]
