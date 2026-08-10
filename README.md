@@ -59,6 +59,26 @@ score is relative, so its top hit is always normalized to 1.0.
 Core app needs only `fastapi` + `uvicorn`. The retrieval engine and the SQLite
 layer are pure standard library, so it runs fully offline with no API key.
 
+### Offline by default, LLM/OCR as optional upgrades
+
+The **rule engine is the default path**, not a fallback for when the LLM breaks.
+Everything below degrades gracefully, so a clone with zero configuration still
+produces the same verdicts on text and URLs:
+
+| Capability | Without extras (default) | With the optional extra |
+|---|---|---|
+| URL heuristics | full rule checks, offline | unchanged |
+| Text analysis | rule engine | `openai` installed **and** `OPENAI_API_KEY` set → LLM tactics |
+| Screenshots | placeholder signal | `easyocr` (or `paddleocr`) installed → OCR'd text runs through the text analysis |
+
+Diagnostics go through the stdlib `logging` module, so nothing is written to
+stdout during normal operation. To inspect what OCR actually read, raise the
+level before starting the app:
+
+```python
+import logging; logging.basicConfig(level=logging.DEBUG)
+```
+
 ```bash
 cd backend
 pip install -r requirements.txt

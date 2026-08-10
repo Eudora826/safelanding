@@ -15,6 +15,8 @@ import unittest
 BACKEND = os.path.join(os.path.dirname(__file__), "..", "backend")
 sys.path.insert(0, os.path.abspath(BACKEND))
 
+os.environ.pop("OPENAI_API_KEY", None)  # keep tests hermetic: rule engine only
+
 from fastapi.testclient import TestClient  # noqa: E402
 
 import main  # noqa: E402
