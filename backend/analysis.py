@@ -3,16 +3,26 @@ analysis.py
 ===========
 All the logic for deciding whether a message / link / image is a scam.
 
+The DEFAULT path is fully offline: rule-based checks, no API key, no network.
+Every LLM/OCR step below is an OPTIONAL upgrade that degrades gracefully back to
+the rule engine when the dependency or the API key is missing.
+
 Three inputs:
-  1. URL    -> real rule-based checks (free/offline).
-  2. Text   -> OpenAI (check_text_llm), falls back to rules.
-  3. Images -> OCR each screenshot (EasyOCR or PaddleOCR), feed the text into
-               the same text analysis. Supports MULTIPLE images. Falls back to
-               a placeholder if OCR is unavailable or finds nothing.
+  1. URL    -> rule-based heuristics (always offline).
+  2. Text   -> rule engine by default; uses OpenAI instead when OPENAI_API_KEY
+               is set AND the `openai` package is installed.
+  3. Images -> OCR each screenshot (EasyOCR or PaddleOCR, optional deps), then
+               feed the text into the same text analysis. Supports MULTIPLE
+               images. Falls back to a placeholder when OCR is unavailable or
+               finds nothing.
+
+Diagnostics go through the stdlib `logging` module (`logger.debug` for OCR dumps),
+so nothing is printed to stdout in normal operation.
 """
 
 import base64
 import json
+import logging
 import os
 import re
 import tempfile
@@ -26,7 +36,9 @@ try:
 except Exception:  # ImportError, or any partial-install error
     OpenAI = None
 
-from models import AnalyzeRequest, AnalyzeResponse, Tactic
+from models import AnalyzeRequest, Tactic
+
+logger = logging.getLogger(__name__)
 
 _api_key = os.environ.get("OPENAI_API_KEY")
 client = OpenAI(api_key=_api_key) if (_api_key and OpenAI is not None) else None
@@ -282,14 +294,13 @@ def clean_ocr_text(raw_text: str, lang: str) -> str:
         cleaned = (resp.choices[0].message.content or "").strip()
         return cleaned or raw_text.strip()
     except Exception as e:
-        print("OCR cleanup failed, using raw text:", e)
+        logger.warning("OCR cleanup failed, using raw text: %s", e)
         return raw_text.strip()
 
 
 def check_text_llm(text: str, lang: str) -> list[tuple[Tactic, int]]:
     """Same input/output contract as check_text(), but uses OpenAI.
     Raises if there's no client or the call/parse fails -> caller falls back."""
-    print(">>> check_text_llm CALLED, client =", client)
     if client is None:
         raise RuntimeError("No OPENAI_API_KEY set")
 
@@ -491,33 +502,8 @@ def check_image(lang: str) -> list[tuple[Tactic, int]]:
         }, lang),
     ), 15)]
 
-
 # ============================================================
-#  Part 3c: analyze one image (OCR -> text analysis), with fallbacks
-# ============================================================
-def analyze_one_image(image_base64: str, idx: int, lang: str) -> list[tuple[Tactic, int]]:
-    """OCR a single image, then run the text analysis on what it read.
-    Prints the OCR result so you can see what was read. Never crashes."""
-    try:
-        ocr_text = ocr_image(image_base64)
-        # ---- print the OCR result for this image ----
-        print(f"\n=== OCR result [image {idx}] ===\n{ocr_text}\n=== end image {idx} ===\n")
-        if ocr_text.strip():
-            try:
-                return check_text_llm(ocr_text, lang)
-            except Exception as e:
-                print(f"LLM (OCR image {idx}) failed, falling back to rules:", e)
-                return check_text(ocr_text, lang)
-        else:
-            print(f"OCR found no text in image {idx}; using placeholder")
-            return check_image(lang)
-    except Exception as e:
-        print(f"OCR failed for image {idx}, using placeholder:", e)
-        return check_image(lang)
-
-
-# ============================================================
-#  Entry point
+#  Part 4: localized "how to spot it yourself" tips
 # ============================================================
 def _spotting_tips(lang: str, checked_url: bool) -> list[str]:
     tips = {
@@ -544,66 +530,8 @@ def _spotting_tips(lang: str, checked_url: bool) -> list[str]:
     return tips[key]
 
 
-def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
-    lang = req.native_language
-    findings: list[tuple[Tactic, int]] = []
-    inputs: list[str] = []
-
-    if req.text.strip():
-        inputs.append("text")
-        try:
-            findings += check_text_llm(req.text, lang)
-        except Exception as e:
-            print("LLM text analysis failed, falling back to rules:", e)
-            findings += check_text(req.text, lang)
-
-    if req.url.strip():
-        inputs.append("url")
-        findings += check_url(req.url, lang)
-
-    # MULTIPLE images: loop over each, OCR + analyze, print each OCR result.
-    real_images = [img for img in req.images_base64 if img.strip()]
-    if real_images:
-        inputs.append(f"image x{len(real_images)}")
-        for idx, img_b64 in enumerate(real_images, start=1):
-            findings += analyze_one_image(img_b64, idx, lang)
-
-    score = min(100, sum(w for _, w in findings))
-    if not findings:
-        score = 5
-
-    if score >= 60:
-        verdict = "dangerous"
-    elif score >= 20:
-        verdict = "suspicious"
-    else:
-        verdict = "safe"
-
-    n = len(findings)
-    summary_map = {
-        "en": (f"Found {n} warning sign(s). Treat this with high caution." if verdict == "dangerous"
-               else f"Found {n} warning sign(s). Be careful and verify." if verdict == "suspicious"
-               else "No clear scam signals detected - but stay alert."),
-        "zh": (f"发现 {n} 个危险信号,请高度警惕。" if verdict == "dangerous"
-               else f"发现 {n} 个可疑信号,请小心核实。" if verdict == "suspicious"
-               else "没有发现明显诈骗信号——但仍要保持警惕。"),
-        "nl": (f"{n} waarschuwingssignaal(en) gevonden. Wees zeer voorzichtig." if verdict == "dangerous"
-               else f"{n} waarschuwingssignaal(en) gevonden. Wees voorzichtig en controleer." if verdict == "suspicious"
-               else "Geen duidelijke scam-signalen - blijf toch alert."),
-    }
-    summary = L(summary_map, lang)
-
-    return AnalyzeResponse(
-        verdict=verdict,
-        risk_score=score,
-        summary=summary,
-        inputs_analyzed=inputs,
-        tactics=[t for t, _ in findings],
-        how_to_spot=_spotting_tips(lang, "url" in inputs),
-    )
-
 # ============================================================
-#  Reusable signal collection (used by fusion.py)
+#  Entry point: signal collection (used by fusion.py)
 # ============================================================
 def collect_signals(req: "AnalyzeRequest") -> tuple[list[tuple["Tactic", int]], list[str], str]:
     """Run the live detectors and ALSO return the combined plain text.
@@ -624,7 +552,7 @@ def collect_signals(req: "AnalyzeRequest") -> tuple[list[tuple["Tactic", int]], 
         try:
             findings += check_text_llm(req.text, lang)
         except Exception as e:
-            print("LLM text analysis failed, falling back to rules:", e)
+            logger.info("LLM text analysis unavailable, using rule engine: %s", e)
             findings += check_text(req.text, lang)
 
     if req.url.strip():
@@ -639,20 +567,20 @@ def collect_signals(req: "AnalyzeRequest") -> tuple[list[tuple["Tactic", int]], 
             # OCR once here, reuse the text for both findings and DB retrieval.
             try:
                 ocr_text = ocr_image(img_b64)
-                print(f"\n=== OCR result [image {idx}] ===\n{ocr_text}\n=== end image {idx} ===\n")
+                logger.debug("OCR result [image %d]: %s", idx, ocr_text)
                 ocr_text = clean_ocr_text(ocr_text, lang)
-                print(f"\n=== CLEANED [image {idx}] ===\n{ocr_text}\n=== end cleaned {idx} ===\n")
+                logger.debug("OCR cleaned [image %d]: %s", idx, ocr_text)
                 if ocr_text.strip():
                     text_parts.append(ocr_text)
                     try:
                         findings += check_text_llm(ocr_text, lang)
                     except Exception as e:
-                        print(f"LLM (OCR image {idx}) failed, falling back to rules:", e)
+                        logger.info("LLM unavailable for image %d, using rule engine: %s", idx, e)
                         findings += check_text(ocr_text, lang)
                 else:
                     findings += check_image(lang)
             except Exception as e:
-                print(f"OCR failed for image {idx}, using placeholder:", e)
+                logger.warning("OCR failed for image %d, using placeholder: %s", idx, e)
                 findings += check_image(lang)
 
     combined_text = "\n".join(text_parts).strip()
