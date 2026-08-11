@@ -4,11 +4,9 @@ A rental-scam detector for **non-native speakers** in the Netherlands, backed by
 persistent **community threat-intelligence database**. Paste a message, a link, or
 a screenshot; get one verdict explained in your own language.
 
-<!-- Screenshots: drop the three PNGs into docs/screenshots/ and uncomment.
-| Dangerous verdict | Safe verdict | Admin console |
-|---|---|---|
-| ![](docs/screenshots/verdict-dangerous.png) | ![](docs/screenshots/verdict-safe.png) | ![](docs/screenshots/admin-console.png) |
--->
+| Text analysis | URL analysis |
+|---|---|
+| ![Text detection example](demos/detection_demos/text_detection_example.png) | ![URL detection example](demos/detection_demos/URL_detection_example.png) |
 
 **Stack:** Python · FastAPI · SQLite · Docker · vanilla JS (no framework)
 
@@ -181,7 +179,9 @@ safelanding/
 ├── frontend/index.html            analyzer UI (verdict + tactics + DB panels + report button)
 ├── static/admin.html              admin review console
 ├── data/                          JSON seeds (source of truth); safelanding.db is generated
-├── cases/                         source material behind the seed cases
+├── demos/
+│   ├── detection_demos/           screenshots of the app in action
+│   └── sources/                   public case material behind the seed data
 ├── docs/                          data dictionary + example queries
 ├── tests/                         test_retrieval.py (engine) + test_fusion.py (integration)
 ├── Dockerfile
