@@ -1,7 +1,26 @@
 # 🏠 SafeLanding — full-stack rental-scam assistant
 
-A rental-scam detector for **non-native speakers** in the Netherlands, now backed
-by a persistent **community threat-intelligence database**.
+A rental-scam detector for **non-native speakers** in the Netherlands, backed by a
+persistent **community threat-intelligence database**. Paste a message, a link, or
+a screenshot; get one verdict explained in your own language.
+
+<!-- Screenshots: drop the three PNGs into docs/screenshots/ and uncomment.
+| Dangerous verdict | Safe verdict | Admin console |
+|---|---|---|
+| ![](docs/screenshots/verdict-dangerous.png) | ![](docs/screenshots/verdict-safe.png) | ![](docs/screenshots/admin-console.png) |
+-->
+
+**Stack:** Python · FastAPI · SQLite · Docker · vanilla JS (no framework)
+
+**What's in here**
+- REST API with 10 endpoints, Pydantic request/response models, auto-generated OpenAPI docs
+- A keyword-retrieval engine (TF-IDF + identifier matching) written from scratch on the standard library — no numpy, no scikit-learn
+- A fusion layer that merges live heuristics with database intelligence into one score, with a deliberate choice about which signals may drive the verdict
+- Optional-dependency architecture: LLM and OCR are upgrades, not requirements — the app runs fully offline with zero configuration
+- Trilingual UI and explanations (EN / 中文 / NL)
+- SQLite persistence seeded from JSON, an admin review console, Docker packaging, 18 integration tests
+
+---
 
 This project merges two earlier pieces into one full-stack service:
 
@@ -59,26 +78,6 @@ score is relative, so its top hit is always normalized to 1.0.
 Core app needs only `fastapi` + `uvicorn`. The retrieval engine and the SQLite
 layer are pure standard library, so it runs fully offline with no API key.
 
-### Offline by default, LLM/OCR as optional upgrades
-
-The **rule engine is the default path**, not a fallback for when the LLM breaks.
-Everything below degrades gracefully, so a clone with zero configuration still
-produces the same verdicts on text and URLs:
-
-| Capability | Without extras (default) | With the optional extra |
-|---|---|---|
-| URL heuristics | full rule checks, offline | unchanged |
-| Text analysis | rule engine | `openai` installed **and** `OPENAI_API_KEY` set → LLM tactics |
-| Screenshots | placeholder signal | `easyocr` (or `paddleocr`) installed → OCR'd text runs through the text analysis |
-
-Diagnostics go through the stdlib `logging` module, so nothing is written to
-stdout during normal operation. To inspect what OCR actually read, raise the
-level before starting the app:
-
-```python
-import logging; logging.basicConfig(level=logging.DEBUG)
-```
-
 ```bash
 cd backend
 pip install -r requirements.txt
@@ -93,6 +92,32 @@ Open:
 
 The SQLite database is created at `data/safelanding.db` on first start, seeded
 from the JSON files in `data/`. Delete that file to reseed from scratch.
+
+### Offline by default, LLM/OCR as optional upgrades
+
+The **rule engine is the default path**, not a fallback for when the LLM breaks.
+Everything below degrades gracefully, so a clone with zero configuration still
+produces the same verdicts on text and URLs:
+
+| Capability | Without extras (default) | With the optional extra |
+|---|---|---|
+| URL heuristics | full rule checks, offline | unchanged |
+| Text analysis | rule engine | `openai` installed **and** `OPENAI_API_KEY` set → LLM tactics |
+| Screenshots | placeholder signal | `easyocr` (or `paddleocr`) installed → OCR'd text runs through the text analysis |
+
+To install the optional extras:
+
+```bash
+pip install -r requirements-optional.txt
+```
+
+Diagnostics go through the stdlib `logging` module, so nothing is written to
+stdout during normal operation. To inspect what OCR actually read, raise the
+level before starting the app:
+
+```python
+import logging; logging.basicConfig(level=logging.DEBUG)
+```
 
 ### Docker
 
@@ -140,24 +165,27 @@ The `/api/analyze` response carries both halves: `verdict`, `risk_score`,
 ## Layout
 
 ```
-safelanding-fullstack/
+safelanding/
 ├── backend/
-│   ├── main.py           FastAPI app: pages + fused analyze + full DB API
-│   ├── fusion.py         joins live signals with database intelligence  ← the merge
-│   ├── analysis.py       live engine: URL rules + text rules/LLM + OCR
-│   ├── models.py         Pydantic request/response (incl. database fields)
-│   ├── safelanding/      dependency-free data + retrieval package
-│   │   ├── data_store.py SQLite persistence, seeded from JSON
-│   │   ├── retrieval.py  TF-IDF + identifier matching
-│   │   ├── server.py     legacy stdlib server (kept; FastAPI replaces it)
-│   │   └── cli.py        `python -m safelanding.cli retrieve "..."`
-│   └── requirements.txt
-├── frontend/index.html   analyzer UI (verdict + tactics + DB panels + report button)
-├── static/admin.html     admin review console
-├── data/                 JSON seeds (source of truth); safelanding.db is generated
-├── docs/                 data dictionary + example queries
-├── tests/                test_retrieval.py (engine) + test_fusion.py (integration)
-└── Dockerfile
+│   ├── main.py                    FastAPI app: pages + fused analyze + full DB API
+│   ├── fusion.py                  joins live signals with database intelligence  ← the merge
+│   ├── analysis.py                live engine: URL rules + text rules/LLM + OCR
+│   ├── models.py                  Pydantic request/response (incl. database fields)
+│   ├── safelanding/               dependency-free data + retrieval package
+│   │   ├── data_store.py          SQLite persistence, seeded from JSON
+│   │   ├── retrieval.py           TF-IDF + identifier matching
+│   │   ├── server.py              legacy stdlib server (kept; FastAPI replaces it)
+│   │   └── cli.py                 `python -m safelanding.cli retrieve "..."`
+│   ├── requirements.txt           core: fastapi + uvicorn + pydantic
+│   └── requirements-optional.txt  LLM + OCR extras
+├── frontend/index.html            analyzer UI (verdict + tactics + DB panels + report button)
+├── static/admin.html              admin review console
+├── data/                          JSON seeds (source of truth); safelanding.db is generated
+├── cases/                         source material behind the seed cases
+├── docs/                          data dictionary + example queries
+├── tests/                         test_retrieval.py (engine) + test_fusion.py (integration)
+├── Dockerfile
+└── LICENSE
 ```
 
 ## Tests
@@ -166,10 +194,24 @@ safelanding-fullstack/
 PYTHONPATH=backend python -m unittest discover -s tests
 ```
 
+## Known limitations & abuse considerations
+
+This is a hackathon MVP, deliberately scoped. What I would fix before real use:
+
+- **Admin write endpoints are unauthenticated.** Anyone can `PUT /api/reports/{id}`
+  to mark a report Verified, and a verified report forces a `dangerous` verdict.
+  A shared-token header (or proper sessions) is the minimum fix.
+- **Report poisoning.** Anyone can submit a report against any phone/email.
+  Partial mitigation in place: pending reports can never force `dangerous` on
+  their own — only admin-verified ones can. Production needs rate limiting and
+  reporter accountability.
+- **No rate limiting** on `/api/analyze` or `/api/reports`.
+- **Seed cases are annotated MVP records**, not verified, source-linked incidents.
+
 ## Notes
 
-The JSON files are seed data; runtime submissions and admin edits live in
-`data/safelanding.db`. The starter cases are annotated MVP records — before any
-real use, replace or enrich them with verified, source-linked case notes. The
-reference patterns/cases/knowledge-gaps content is English; the per-user
-explanations (verdict, tactics, tips) are localized to English/中文/Nederlands.
+The JSON files in `data/` are seed data; runtime submissions and admin edits live
+in `data/safelanding.db`. The reference patterns/cases/knowledge-gaps content is
+English; the per-user explanations (verdict, tactics, tips) are localized to
+English/中文/Nederlands.
+
