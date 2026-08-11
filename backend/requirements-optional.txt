@@ -1,0 +1,10 @@
+# Optional upgrades — the app degrades gracefully without them.
+# See the "Offline by default" section in README.md.
+
+# LLM-based text analysis (also needs OPENAI_API_KEY set):
+openai>=1.0
+
+# OCR for screenshot analysis. Pick ONE engine:
+easyocr>=1.7           # default (OCR_ENGINE=easyocr)
+# paddlepaddle>=2.6    # heavier alternative (OCR_ENGINE=paddle)
+# paddleocr>=2.7
